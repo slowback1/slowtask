@@ -1,0 +1,18 @@
+{
+  "$schema": "https://json.schemastore.org/web-manifest-combined.json",
+  "short_name": "SlowTask",
+  "name": "SlowTask Task Management",
+  "display": "standalone",
+  "scope": "/",
+  "description": "Task management app built with SvelteKit",
+  "theme_color": "#393939",
+  "background_color": "#393939",
+  "start_url": "/",
+  "icons": [
+    {
+      "src": "logo_256.png",
+      "purpose": "any",
+      "type": "image/png"
+    }
+  ]
+}
