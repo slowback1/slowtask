@@ -1,3 +1,5 @@
+#!/bin/bash
+
 if [[ ! -v AWS_KEY ]]; then
   echo "AWS_KEY is required"
   exit 1
