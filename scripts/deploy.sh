@@ -13,4 +13,6 @@ if [[ ! -v AWS_BUCKET ]]; then
   exit 1
 fi
 
+echo "deploying..."
+
 aws s3 sync ./build $AWS_BUCKET --delete
