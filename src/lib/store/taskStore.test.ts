@@ -3,7 +3,8 @@ import type IStorageProvider from '$lib/store/IStorageProvider';
 import getLocalStorageMock from '../../testHelpers/localStorageMock';
 import { testTask } from '../../testHelpers/testTask';
 import STORAGE_KEYS from '$lib/store/storageKeys';
-import { beforeEach } from 'vitest';
+import { beforeEach, describe } from 'vitest';
+import type { Task } from '$lib/types';
 
 describe('taskStore', () => {
 	let store: TaskStore;
@@ -15,7 +16,7 @@ describe('taskStore', () => {
 	});
 
 	function addTask() {
-		store.add(testTask);
+		return store.add(testTask);
 	}
 
 	describe('adding tasks', () => {
@@ -46,6 +47,22 @@ describe('taskStore', () => {
 
 			expect(parsed.length).toEqual(2);
 		});
+
+		it('adding a task returns the added task', () => {
+			let result = store.add(testTask);
+
+			expect(result.name).toEqual(testTask.name);
+		});
+
+		it('adding a task generates a unique id', () => {
+			let result = store.add(testTask);
+
+			expect(result.taskId).not.toEqual('test-id');
+
+			let result2 = store.add(testTask);
+
+			expect(result.taskId).not.toEqual(result2.taskId);
+		});
 	});
 
 	describe('getting all tasks', () => {
@@ -57,16 +74,108 @@ describe('taskStore', () => {
 			let results = store.getAll();
 
 			expect(results.length).toEqual(3);
-
-			results.forEach((result) => {
-				expect(result.taskId).toEqual(testTask.taskId);
-			});
 		});
 
 		it('returns an empty array when the store is not initialized with any tasks', () => {
 			let result = store.getAll();
 
 			expect(result).toEqual([]);
+		});
+	});
+
+	describe('getting a single task', () => {
+		it('returns the task of the id', () => {
+			var stored = addTask();
+
+			let result = store.getById(stored.taskId);
+
+			expect(result).toEqual(stored);
+		});
+
+		it('returns undefined if the task does not exist', () => {
+			addTask();
+
+			let result = store.getById('i-dont-exist');
+
+			expect(result).toEqual(undefined);
+		});
+	});
+
+	describe('marking a task as completed', () => {
+		let taskId: string;
+
+		beforeEach(() => {
+			let task = store.add(testTask);
+
+			taskId = task.taskId;
+		});
+
+		it('returns the task', () => {
+			let completedTask = store.markComplete(taskId);
+
+			expect(completedTask.taskId).toEqual(taskId);
+		});
+
+		it('updates the task to be complete', () => {
+			let completedTask = store.markComplete(taskId);
+
+			expect(completedTask.isCompleted).toEqual(true);
+		});
+
+		it('updates the store', () => {
+			let completedTask = store.markComplete(taskId);
+
+			let stored = JSON.parse(storageProvider.getItem(STORAGE_KEYS.TASKS)) as Task[];
+
+			let newlyCompletedTask = stored[0];
+
+			expect(newlyCompletedTask.isCompleted).toEqual(true);
+		});
+	});
+
+	describe('deleting a task', () => {
+		let taskId: string;
+
+		beforeEach(() => {
+			let task = addTask();
+
+			taskId = task.taskId;
+		});
+
+		it('can delete a task', () => {
+			let remainingTasks = store.delete(taskId);
+
+			expect(remainingTasks.length).toEqual(0);
+		});
+
+		it('removes from the store', () => {
+			store.delete(taskId);
+
+			let stored = JSON.parse(storageProvider.getItem(STORAGE_KEYS.TASKS)) as Task[];
+
+			expect(stored.length).toEqual(0);
+		});
+	});
+
+	describe('updating tasks', () => {
+		let task: Task;
+
+		beforeEach(() => {
+			task = addTask();
+		});
+
+		it.each([
+			['name', 'new name'],
+			['details', 'new details'],
+			['dueDate', new Date(1994, 2, 17)],
+			['createdDate', new Date(1994, 2, 17)],
+			['isCompleted', true]
+		])('can update %s', (key, value) => {
+			let updated = store.update(task.taskId, { ...task, [key]: value });
+
+			let stored = store.getAll();
+
+			expect(stored[0][key]).toEqual(value);
 		});
 	});
 });

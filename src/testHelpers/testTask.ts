@@ -5,5 +5,6 @@ export const testTask: Task = {
 	createdDate: new Date(2022, 2, 2),
 	details: 'test details',
 	dueDate: new Date(2022, 2, 3),
-	name: 'test name'
+	name: 'test name',
+	isCompleted: false
 };
