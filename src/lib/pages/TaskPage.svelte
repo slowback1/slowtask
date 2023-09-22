@@ -30,14 +30,19 @@
       details: "test details"
     });
   }
+
+  function updateTask(task: Task) {
+    context.update(task.taskId, task);
+  }
 </script>
+
+
+<div class="task-list" data-testid="task-list">
+  {#each tasks as task}
+    <TaskItem task={task} onUpdate={updateTask} />
+  {/each}
+</div>
 
 <button on:click={addTask} data-testid="add-task-button">
   Add Task
 </button>
-
-<div class="task-list" data-testid="task-list">
-  {#each tasks as task}
-    <TaskItem task={task} />
-  {/each}
-</div>

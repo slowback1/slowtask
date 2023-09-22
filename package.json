@@ -36,6 +36,7 @@
 	},
 	"type": "module",
 	"dependencies": {
+		"@testing-library/jest-dom": "^6.1.3",
 		"cypress": "^13.1.0"
 	}
 }

@@ -19,9 +19,19 @@ export default class TaskContext {
 	private readonly store: TaskStore;
 
 	private constructor(store: Writable<Task[]>, storageProvider: IStorageProvider) {
-		this.subscribe = store.subscribe;
+		this.subscribe = this.processSubscribe(store);
 		this.setValues = store.set;
 		this.store = new TaskStore(storageProvider);
+	}
+
+	private processSubscribe(store: Writable<Task[]>) {
+		return (run: Subscriber<Task[]>, invalidate: Invalidator<Task[]>) => {
+			let unsubscribe = store.subscribe(run, invalidate);
+
+			this.notifySubscribers();
+
+			return unsubscribe;
+		};
 	}
 
 	update(id: string, updatedValue: Task) {
@@ -51,6 +61,10 @@ export default class TaskContext {
 
 			if (task) callback(task);
 		});
+	}
+
+	notifySubscribers() {
+		this.updateSubscribers();
 	}
 
 	static Create(storageProvider: IStorageProvider) {

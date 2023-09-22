@@ -15,4 +15,22 @@ describe('One Off Tasks', () => {
 		pageObject.addTask(taskName);
 		pageObject.validateTaskExists(taskName);
 	});
+
+	it('can edit a task', () => {
+		const firstName = 'write more tests';
+		const secondName = 'make those tests pass';
+
+		pageObject.addTask(firstName);
+		pageObject.editTaskName(firstName, secondName);
+		pageObject.validateTaskExists(secondName);
+	});
+
+	it('can delete a task', () => {
+		const name = 'delete this test';
+
+		pageObject.addTask(name);
+		pageObject.validateTaskExists(name);
+		pageObject.deleteTask(name);
+		pageObject.validateTaskDoesNotExist(name);
+	});
 });

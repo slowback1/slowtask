@@ -6,3 +6,4 @@ export type Task = {
 	createdDate: Date;
 	isCompleted: boolean;
 };
+export type HTMLInputEvent = Event & { target?: { value?: string } };

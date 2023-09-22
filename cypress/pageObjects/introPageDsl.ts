@@ -10,6 +10,6 @@ export default class IntroPageDsl extends DSL {
 	}
 
 	clickNewUserButton() {
-		cy.get("[data-cy='intro-page__new-user-button']").click();
+		cy.get("[data-testid='intro-page__new-user-button']").click();
 	}
 }
