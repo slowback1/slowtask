@@ -2,8 +2,9 @@
   import { slugify } from "$lib/utils/stringUtils";
 
   export let type = "text";
-export let label = "";
-  export let onChange = (event) => {};
+  export let label = "";
+  export let onChange = (event: Event) => {
+  };
   export let id = slugify(label);
   export let value = "";
 </script>

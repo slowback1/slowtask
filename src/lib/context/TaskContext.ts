@@ -7,6 +7,7 @@ import {
 } from 'svelte/store';
 import TaskStore from '$lib/store/taskStore';
 import type { Task } from '$lib/types';
+import type IStorageProvider from '$lib/store/IStorageProvider';
 
 export default class TaskContext {
 	public subscribe: (
@@ -16,10 +17,11 @@ export default class TaskContext {
 	) => Unsubscriber;
 	private readonly setValues: (this: void, value: Task[]) => void;
 	private readonly store: TaskStore;
-	private constructor(store: Writable<Task[]>) {
+
+	private constructor(store: Writable<Task[]>, storageProvider: IStorageProvider) {
 		this.subscribe = store.subscribe;
 		this.setValues = store.set;
-		if (window) this.store = new TaskStore(window.localStorage);
+		this.store = new TaskStore(storageProvider);
 	}
 
 	update(id: string, updatedValue: Task) {
@@ -51,11 +53,11 @@ export default class TaskContext {
 		});
 	}
 
-	static Create() {
+	static Create(storageProvider: IStorageProvider) {
 		let initialState: Task[] = [];
-		if (window) initialState = new TaskStore(window.localStorage).getAll();
+		new TaskStore(storageProvider).getAll();
 		let store = writable(initialState);
 
-		return new TaskContext(store);
+		return new TaskContext(store, storageProvider);
 	}
 }
