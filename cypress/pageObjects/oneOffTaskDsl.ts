@@ -33,7 +33,22 @@ export default class OneOffTaskDsl extends DSL {
 	}
 
 	validateTaskDoesNotExist(taskName: string) {
-		cy.get("[data-testid='task-item']").contains(taskName).should('not.exist');
+		cy.contains(taskName).should('not.exist');
+	}
+
+	private selectTaskCheckbox(taskName: string) {
+		return cy
+			.contains(taskName)
+			.parent("[data-testid='task-item']")
+			.get("[data-testid='task-item__complete']");
+	}
+
+	toggleTaskComplete(taskName: string) {
+		this.selectTaskCheckbox(taskName).click();
+	}
+
+	verifyIfTaskIsComplete(taskName: string, shouldBeComplete: boolean) {
+		this.selectTaskCheckbox(taskName).should(shouldBeComplete ? 'be.checked' : 'not.be.checked');
 	}
 
 	static validateIsOnTaskPage() {

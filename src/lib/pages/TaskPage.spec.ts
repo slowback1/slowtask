@@ -20,6 +20,7 @@ describe('TaskPage', () => {
 	}
 
 	beforeEach(() => {
+		storageMock.setItem(STORAGE_KEYS.TASKS, undefined);
 		renderComponent();
 	});
 
@@ -55,15 +56,57 @@ describe('TaskPage', () => {
 		expect(storageMock.getItem(STORAGE_KEYS.TASKS).length).toBeGreaterThan(0);
 	});
 
-	it('clicking on a task turns it into an editable field', async () => {
-		addTestTask();
-
+	async function toggleEditModeForFirstTask() {
 		await act(async () => {
 			let taskItem = result.getAllByTestId('task-item__toggle')[0];
 			await fireEvent.click(taskItem);
 		});
+	}
+
+	it('clicking on a task turns it into an editable field', async () => {
+		addTestTask();
+		await toggleEditModeForFirstTask();
 		await waitFor(() => {
 			expect(result.container.querySelector('input')).toBeTruthy();
 		});
+	});
+
+	it('clicking the delete button deletes the task', async () => {
+		addTestTask();
+		await toggleEditModeForFirstTask();
+
+		let beforeTaskCount = JSON.parse(storageMock.getItem(STORAGE_KEYS.TASKS)).length;
+
+		let deleteButton = result.getByTestId('task-item__delete');
+		await fireEvent.click(deleteButton);
+
+		let afterTaskCount = JSON.parse(storageMock.getItem(STORAGE_KEYS.TASKS)).length;
+
+		expect(afterTaskCount + 1).toEqual(beforeTaskCount);
+	});
+
+	it('clicking the toggle complete button toggles the completed status of the task', async () => {
+		addTestTask();
+
+		let toggle = result.getAllByTestId('task-item__complete')[0];
+
+		await fireEvent.click(toggle);
+
+		let firstTask: Task = JSON.parse(storageMock.getItem(STORAGE_KEYS.TASKS))[0];
+
+		expect(firstTask.isCompleted).toEqual(true);
+	});
+
+	it('clicking the toggle button twice toggles the completed status back off', async () => {
+		addTestTask();
+
+		let toggle = result.getAllByTestId('task-item__complete')[0];
+
+		await fireEvent.click(toggle);
+		await fireEvent.click(toggle);
+
+		let firstTask: Task = JSON.parse(storageMock.getItem(STORAGE_KEYS.TASKS))[0];
+
+		expect(firstTask.isCompleted).toEqual(false);
 	});
 });

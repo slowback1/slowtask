@@ -33,4 +33,37 @@ describe('One Off Tasks', () => {
 		pageObject.deleteTask(name);
 		pageObject.validateTaskDoesNotExist(name);
 	});
+
+	it('can toggle a task complete', () => {
+		const name = 'complete this task';
+
+		pageObject.addTask(name);
+		pageObject.validateTaskExists(name);
+		pageObject.toggleTaskComplete(name);
+		pageObject.verifyIfTaskIsComplete(name, true);
+	});
+
+	it('toggling the task twice sets the task to not complete', () => {
+		const name = 'uncomplete this task';
+
+		pageObject.addTask(name);
+		pageObject.validateTaskExists(name);
+		pageObject.toggleTaskComplete(name);
+		pageObject.verifyIfTaskIsComplete(name, true);
+		pageObject.toggleTaskComplete(name);
+		pageObject.verifyIfTaskIsComplete(name, false);
+	});
+
+	it('toggle the task complete persists after a page reload', () => {
+		const name = 'this should persist';
+
+		pageObject.addTask(name);
+		pageObject.validateTaskExists(name);
+		pageObject.toggleTaskComplete(name);
+		pageObject.verifyIfTaskIsComplete(name, true);
+
+		pageObject.reloadPage();
+
+		pageObject.verifyIfTaskIsComplete(name, true);
+	});
 });

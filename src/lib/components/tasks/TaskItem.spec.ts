@@ -3,18 +3,30 @@ import TaskItem from '$lib/components/tasks/TaskItem.svelte';
 import { afterEach, beforeEach, expect, type Mock } from 'vitest';
 import { act, fireEvent, render, waitFor } from '@testing-library/svelte';
 import { testTask } from '../../../testHelpers/testTask';
+import type { Task } from '$lib/types';
 
 describe('TaskItem', () => {
 	let result: RenderResult<TaskItem>;
 	let eventMock: Mock;
 	let onUpdate: Mock;
+	let onDelete: Mock;
+	let onToggleComplete: Mock;
 
-	function renderComponent() {
+	function renderComponent(overrides: Partial<Task> = {}) {
 		if (result) result.unmount();
 		eventMock = vi.fn();
 		onUpdate = vi.fn();
+		onDelete = vi.fn();
+		onToggleComplete = vi.fn();
 
-		result = render(TaskItem, { props: { task: testTask, onUpdate: onUpdate } });
+		result = render(TaskItem, {
+			props: {
+				task: { ...testTask, ...overrides },
+				onUpdate: onUpdate,
+				onDelete: onDelete,
+				onToggleComplete: onToggleComplete
+			}
+		});
 
 		result.container.addEventListener('change', eventMock);
 	}
@@ -111,5 +123,48 @@ describe('TaskItem', () => {
 		let toggle = result.getByTestId('task-item__toggle');
 
 		expect(toggle).toBeInTheDocument();
+	});
+
+	it('contains a button to delete the task when in edit mode', async () => {
+		await clickTaskToggle();
+
+		let deleteButton = result.getByTestId('task-item__delete');
+
+		expect(deleteButton).toBeInTheDocument();
+	});
+
+	it('clicking the delete button calls the onDelete method with the given task', async () => {
+		await clickTaskToggle();
+
+		let deleteButton = result.getByTestId('task-item__delete');
+
+		await fireEvent.click(deleteButton);
+
+		expect(onDelete).toHaveBeenCalled();
+		let taskId = onDelete.mock.lastCall[0];
+
+		expect(taskId).toEqual(testTask.taskId);
+	});
+
+	it("contains a 'complete task' checkbox", () => {
+		let completeCheckbox = result.getByTestId('task-item__complete');
+
+		expect(completeCheckbox).toBeInTheDocument();
+	});
+
+	it('checking the complete task checkbox calls the onToggleComplete callback', async () => {
+		let completeCheckbox = result.getByTestId('task-item__complete');
+
+		await fireEvent.click(completeCheckbox);
+
+		expect(onToggleComplete).toHaveBeenCalledWith(testTask.taskId);
+	});
+
+	it('the complete checkbox is checked if the task is already complete', async () => {
+		renderComponent({ isCompleted: true });
+
+		let completeCheckbox = result.getByTestId('task-item__complete');
+
+		expect(completeCheckbox).toBeChecked();
 	});
 });
