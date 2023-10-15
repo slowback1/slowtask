@@ -2,23 +2,37 @@
   export let testId: string = "";
   type ButtonVariant = "primary" | "secondary";
   export let variant: ButtonVariant = "primary";
+  export let href: string = undefined;
 
 </script>
 
-<button
-  class="button"
-  class:button-secondary={variant === "secondary"}
-  class:button-primary={variant === "primary"}
-  data-testid={testId}
->
-  <slot />
-</button>
-
+{#if href}
+  <a href={href}
+     class="button"
+     class:button-secondary={variant === "secondary"}
+     class:button-primary={variant === "primary"}
+     data-testid={testId}
+  >
+    <slot></slot>
+  </a>
+{:else}
+  <button
+    class="button"
+    class:button-secondary={variant === "secondary"}
+    class:button-primary={variant === "primary"}
+    data-testid={testId}
+  >
+    <slot />
+  </button>
+{/if}
 <style>
     .button {
         border-radius: 4px;
         border: 1px solid;
-        padding: 4px 12px;
+        padding: 8px 16px;
+        text-decoration: none;
+        font-family: var(--font-family-primary);
+        font-size: var(--font-size-medium);
     }
 
     .button:disabled {

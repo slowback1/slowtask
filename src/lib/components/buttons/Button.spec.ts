@@ -69,4 +69,12 @@ describe('Button', () => {
 
 		expect(buttonWithTestId).toBeInTheDocument();
 	});
+
+	it('passes through the href attribute to make the button a link', () => {
+		renderComponent({ href: '/test' });
+
+		let link = result.getByRole('link');
+
+		expect(link).toBeInTheDocument();
+	});
 });

@@ -15,4 +15,10 @@
 
     --color-font-light: #fde3e3;
     --color-font-dark: #01091c;
+
+    --font-family-primary: "Montseratt", sans-serif;
+
+    --font-size-large: 32px;
+    --font-size-medium: 20px;
+    --font-size-small: 16px;
 }
