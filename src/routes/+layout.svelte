@@ -11,7 +11,7 @@
         --gutters-x: 64px;
 
         min-height: calc(100vh - var(--gutters-y) * 2);
-        background-color: var(--color-night);
+        background-color: var(--color-rich-blue);
         color: var(--color-font-light);
         padding: var(--gutters-y) var(--gutters-x);
         scroll-behavior: auto;
