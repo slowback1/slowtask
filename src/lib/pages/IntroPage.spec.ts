@@ -21,7 +21,7 @@ describe('IntroPage', () => {
 		it('contains a new user section', () => {
 			let section = result.getByTestId('intro-page__new-user');
 			expect(section).toBeTruthy();
-			expect(section.className).toEqual('intro-page__new-user');
+			expect(section).toHaveClass('intro-page__new-user');
 		});
 
 		it('contains a link to start the app as a new user', () => {
