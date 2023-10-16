@@ -1,0 +1,26 @@
+name: Deploy to Terraform
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+    - uses: "finnp/create-file-action@master"
+      env:
+        FILE_NAME: "lambdas/infrastructure/dev.conf"
+        FILE_DATA: ${{ SECRETS.TERRAFORM_CONFIG }}
+    - name: Build the Docker image
+      run: docker build . --file terraform.Dockerfile
+      env:
+        AWS_ACCESS_KEY_ID: ${{ AWS_KEY_ID }}
+        AWS_SECRET_ACCESS_KEY: ${{ AWS_SECRET }}
+        AWS_DEFAULT_REGION: us-east-2
