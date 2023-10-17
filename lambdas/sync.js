@@ -3,14 +3,16 @@ const AWS = require('aws-sdk');
 exports.handler = async (event) => {
 	const body = JSON.parse(event.body);
 
-	const { key } = body;
+	const { id, key, payload } = body;
 
 	const documentClient = new AWS.DynamoDB.DocumentClient();
 
 	const params = {
 		TableName: 'TaskStore',
 		Item: {
-			key: key
+			id: id,
+			key: key,
+			payload: payload
 		}
 	};
 
@@ -18,12 +20,12 @@ exports.handler = async (event) => {
 	let statusCode = 200;
 
 	try {
-		const data = await documentClient.scan(params).promise();
+		const data = await documentClient.put(params).promise();
 
 		responseBody = JSON.stringify(data);
 		statusCode = 201;
 	} catch (err) {
-		responseBody = `Unable to get task: ${err}`;
+		responseBody = `Unable to put task: ${err}`;
 		statusCode = 403;
 	}
 
