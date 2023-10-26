@@ -1,12 +1,12 @@
 import type { Task } from '$lib/types';
 import STORAGE_KEYS from '$lib/store/storageKeys';
 import BaseStore from '$lib/store/BaseStore';
-import * as crypto from 'crypto';
 
-export default class TaskStore extends BaseStore<Task> {
+export default class TaskStore extends BaseStore<Task, Task[]> {
 	_storageKey = STORAGE_KEYS.TASKS;
+
 	private getCurrentTasks(): Task[] {
-		let currentTasks = this.storageProvider.getItem(STORAGE_KEYS.TASKS);
+		let currentTasks = this.getFromStorage();
 
 		if (currentTasks) {
 			let parsed = JSON.parse(currentTasks) as Task[];
@@ -37,7 +37,7 @@ export default class TaskStore extends BaseStore<Task> {
 		return task;
 	}
 
-	getAll(): Task[] {
+	get(): Task[] {
 		return this.getCurrentTasks();
 	}
 
@@ -52,7 +52,7 @@ export default class TaskStore extends BaseStore<Task> {
 	}
 
 	private updateTask(id: string, updatedValue: Task) {
-		let tasks = this.getAll();
+		let tasks = this.get();
 
 		let index = tasks.findIndex((t) => t.taskId === id);
 
@@ -72,10 +72,14 @@ export default class TaskStore extends BaseStore<Task> {
 	}
 
 	delete(id: string): Task[] {
-		let tasks = this.getAll().filter((t) => t.taskId !== id);
+		let tasks = this.get().filter((t) => t.taskId !== id);
 
 		this.saveChanges(tasks);
 
 		return tasks;
+	}
+
+	setTasks(tasks: Task[]) {
+		this.saveChanges(tasks);
 	}
 }

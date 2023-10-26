@@ -29,7 +29,7 @@ describe('TaskPage', () => {
 
 		store.add(testTask);
 
-		renderComponent(store.getAll());
+		renderComponent(store.get());
 	}
 
 	it('contains a container list', () => {

@@ -1,4 +1,4 @@
-import type { ApiConfig } from '$lib/types';
+import type { ApiConfig, ApiData } from '$lib/types';
 import UserEncoder from '$lib/api/userEncoder';
 
 export default class API {
@@ -26,10 +26,10 @@ export default class API {
 				Authorization: `Bearer ${config.auth_token}`,
 				apikey: config.api_key
 			}
-		});
+		}).then((res) => res.json());
 	}
 
-	public async Login(username: string, password: string) {
+	public async Login(username: string, password: string): Promise<ApiData[]> {
 		let encodedUser = new UserEncoder(username, password).encode();
 
 		let url = `?key=eq.${encodedUser}`;
@@ -37,13 +37,13 @@ export default class API {
 		return this.Request(url);
 	}
 
-	public async Sync(key: string) {
+	public async Sync(key: string): Promise<ApiData[]> {
 		let url = `?key=eq.${key}`;
 
 		return this.Request(url);
 	}
 
-	public async CreateUser(username: string, password: string, body: object) {
+	public async CreateUser(username: string, password: string, body: object): Promise<{}> {
 		let url = '';
 
 		let key = new UserEncoder(username, password).encode();

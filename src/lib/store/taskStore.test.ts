@@ -71,13 +71,13 @@ describe('taskStore', () => {
 			addTask();
 			addTask();
 
-			let results = store.getAll();
+			let results = store.get();
 
 			expect(results.length).toEqual(3);
 		});
 
 		it('returns an empty array when the store is not initialized with any tasks', () => {
-			let result = store.getAll();
+			let result = store.get();
 
 			expect(result).toEqual([]);
 		});
@@ -173,9 +173,19 @@ describe('taskStore', () => {
 		])('can update %s', (key, value) => {
 			let updated = store.update(task.taskId, { ...task, [key]: value });
 
-			let stored = store.getAll();
+			let stored = store.get();
 
 			expect(stored[0][key]).toEqual(value);
+		});
+	});
+
+	describe('setting tasks', () => {
+		it('can blankly set the tasks given', () => {
+			store.setTasks([testTask]);
+
+			let taskList = store.get();
+
+			expect(taskList).toEqual([testTask]);
 		});
 	});
 });

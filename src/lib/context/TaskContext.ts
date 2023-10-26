@@ -52,7 +52,7 @@ export default class TaskContext {
 	}
 
 	private updateSubscribers() {
-		this.setValues(this.store.getAll());
+		this.setValues(this.store.get());
 	}
 
 	subscribeToId(id: string, callback: (task: Task) => void) {
@@ -69,7 +69,7 @@ export default class TaskContext {
 
 	static Create(storageProvider: IStorageProvider) {
 		let initialState: Task[] = [];
-		new TaskStore(storageProvider).getAll();
+		new TaskStore(storageProvider).get();
 		let store = writable(initialState);
 
 		return new TaskContext(store, storageProvider);

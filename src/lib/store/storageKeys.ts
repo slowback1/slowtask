@@ -1,5 +1,6 @@
 const STORAGE_KEYS = {
-	TASKS: 'tasks'
+	TASKS: 'tasks',
+	USER: 'user'
 };
 
 export default STORAGE_KEYS;
