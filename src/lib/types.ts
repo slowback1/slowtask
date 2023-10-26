@@ -7,3 +7,24 @@ export type Task = {
 	isCompleted: boolean;
 };
 export type HTMLInputEvent = Event & { target?: { value?: string } };
+
+export type ApiConfig = {
+	api_url: string;
+	auth_token: string;
+	api_key: string;
+};
+
+export type ApiData = {
+	created_at?: string;
+	task_data: string;
+	key: string;
+};
+
+export interface IApiPayload {
+	version: string;
+	key: string;
+}
+
+export interface ApiPayloadV1_0_0 extends IApiPayload {
+	tasks: Task[];
+}
