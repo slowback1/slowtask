@@ -13,6 +13,10 @@ export default class UserStore extends BaseStore<UserStoreType, UserStoreType> {
 	}
 
 	get(): UserStoreType {
-		return JSON.parse(this.getFromStorage());
+		let storedValue = this.getFromStorage();
+
+		if (!storedValue) return undefined;
+
+		return JSON.parse(storedValue);
 	}
 }

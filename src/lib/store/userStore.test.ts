@@ -47,5 +47,13 @@ describe('UserStore', () => {
 
 			expect(result.key).toEqual('test_key');
 		});
+
+		it("returns undefined if the user isn't there", () => {
+			store.clear();
+
+			let result = store.get();
+
+			expect(result).toBeUndefined();
+		});
 	});
 });

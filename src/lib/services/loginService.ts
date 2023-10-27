@@ -20,6 +20,29 @@ export default class LoginService {
 		this.processLoginResult(result);
 	}
 
+	async syncUpdatedData() {
+		let data = await this.getUpdatedUserData();
+
+		if (!data) {
+			new UserStore(this.storageProvider).clear();
+			return;
+		}
+
+		this.updateTaskData(data);
+	}
+
+	private async getUpdatedUserData() {
+		let api = new API();
+		let userStore = new UserStore(this.storageProvider);
+
+		let result = await api.Sync(userStore.get().key);
+
+		if (!this.isResultSuccessful(result)) return null;
+
+		let data = result[0];
+		return data;
+	}
+
 	private async fetchLogin(username: string, password: string) {
 		let api = new API();
 

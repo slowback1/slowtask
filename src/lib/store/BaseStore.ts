@@ -16,4 +16,8 @@ export default abstract class BaseStore<TInput, TOutput> {
 	protected saveChanges(value: TOutput) {
 		this.storageProvider.setItem(this._storageKey, JSON.stringify(value));
 	}
+
+	clear() {
+		this.storageProvider.setItem(this._storageKey, '');
+	}
 }
