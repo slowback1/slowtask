@@ -5,14 +5,20 @@ export type UserStoreType = {
 	key: string;
 };
 
-export default class UserStore extends BaseStore<UserStoreType, UserStoreType> {
+export type UserStoreOutput = UserStoreType & {
+	username: string;
+};
+
+export default class UserStore extends BaseStore<UserStoreType, UserStoreOutput> {
 	protected readonly _storageKey: string = STORAGE_KEYS.USER;
 
 	add(user: UserStoreType): void {
-		this.saveChanges(user);
+		let userName = atob(user.key);
+
+		this.saveChanges({ key: user.key, username: userName });
 	}
 
-	get(): UserStoreType {
+	get(): UserStoreOutput {
 		let storedValue = this.getFromStorage();
 
 		if (!storedValue) return undefined;

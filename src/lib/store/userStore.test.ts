@@ -13,7 +13,7 @@ describe('UserStore', () => {
 		store = new UserStore(storageProvider);
 	});
 
-	function addUser(key: string = 'test_key') {
+	function addUser(key: string = 'testkey') {
 		return store.add({ key: key });
 	}
 
@@ -26,14 +26,22 @@ describe('UserStore', () => {
 			expect(storedValue).not.toBeUndefined();
 		});
 
+		it('adding the user decrypts the username and stores that too', () => {
+			addUser();
+
+			let storedValue = storageProvider.getItem(STORAGE_KEYS.USER);
+
+			expect(JSON.parse(storedValue).username).toEqual(atob('testkey'));
+		});
+
 		it('adding the user twice replaces the user', () => {
 			addUser();
-			addUser('something_else');
+			addUser('hhh');
 
 			let storedValue = storageProvider.getItem(STORAGE_KEYS.USER);
 
 			let parsedValue = JSON.parse(storedValue);
-			expect(parsedValue.key).toEqual('something_else');
+			expect(parsedValue.key).toEqual('hhh');
 		});
 	});
 
@@ -45,7 +53,7 @@ describe('UserStore', () => {
 		it('can get the user', () => {
 			let result = store.get();
 
-			expect(result.key).toEqual('test_key');
+			expect(result.key).toEqual('testkey');
 		});
 
 		it("returns undefined if the user isn't there", () => {
