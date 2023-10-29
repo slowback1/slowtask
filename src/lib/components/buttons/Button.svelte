@@ -8,28 +8,32 @@
   export let onClick: (event: Event) => void = () => {
   };
 
+  function getClassList() {
+    let classes = "button";
+    let addClass = (cls) => classes += ` ${cls}`;
+
+    if (variant === "secondary") addClass("button-secondary");
+    if (variant === "primary") addClass("button-primary");
+    if (size === "small") addClass("button-small");
+    if (size === "large") addClass("button-large");
+
+    return classes;
+  }
+
+  const props = { class: getClassList(), "data-testid": testId };
+
 </script>
 
 {#if href}
   <a
-    href={href}
-    class="button"
-    class:button-secondary={variant === "secondary"}
-    class:button-primary={variant === "primary"}
-    class:button-small={size === "small"}
-    class:button-large={size === "large"}
-    data-testid={testId}
+    {...props}
+    {href}
   >
     <slot></slot>
   </a>
 {:else}
   <button
-    class="button"
-    class:button-secondary={variant === "secondary"}
-    class:button-primary={variant === "primary"}
-    class:button-small={size === "small"}
-    class:button-large={size === "large"}
-    data-testid={testId}
+    {...props}
     on:click={onClick}
   >
     <slot />
@@ -43,6 +47,10 @@
         text-decoration: none;
         font-family: var(--font-family-primary);
         font-size: var(--font-size-medium);
+    }
+
+    .button:hover {
+        cursor: pointer;
     }
 
     .button-small {
