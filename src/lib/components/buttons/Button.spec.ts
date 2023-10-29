@@ -77,4 +77,32 @@ describe('Button', () => {
 
 		expect(link).toBeInTheDocument();
 	});
+
+	it('calls the onClick handler when the button is clicked', () => {
+		let onClick = vi.fn();
+
+		renderComponent({ onClick });
+
+		let button = result.getByRole('button');
+
+		fireEvent.click(button);
+
+		expect(onClick).toHaveBeenCalled();
+	});
+
+	it("has a 'small' size class when passed the small size prop", () => {
+		renderComponent({ size: 'small' });
+
+		let button = result.getByRole('button');
+
+		expect(button).toHaveClass('button-small');
+	});
+
+	it("has a 'large' size clas when passed the large size prop", () => {
+		renderComponent({ size: 'large' });
+
+		let button = result.getByRole('button');
+
+		expect(button).toHaveClass('button-large');
+	});
 });

@@ -12,4 +12,4 @@
 <label for={id}>
   {label}
 </label>
-<input {type} {value} on:change={onChange} {id} />
+<input data-testid={id} {type} {value} on:change={onChange} {id} />

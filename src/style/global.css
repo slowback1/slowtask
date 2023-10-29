@@ -4,7 +4,6 @@
     --color-sea: #09814a;
     --color-vanilla: #e4d6a7;
     --color-aquamarine: #95f9e3;
-
     --color-rich-blue: #000814;
     --color-oxford-blue: #46b050;
     --color-yale-blue: #003566;
@@ -12,13 +11,23 @@
     --color-nyanza: #ddffd9;
     --color-lavender: #ccc9dc;
     --color-flax: #e3d87e;
-
     --color-font-light: #fde3e3;
     --color-font-dark: #01091c;
 
     --font-family-primary: "Montseratt", sans-serif;
-
     --font-size-large: 32px;
     --font-size-medium: 20px;
     --font-size-small: 16px;
+
+    --header-height: 64px;
+    --gutters-y: 32px;
+    --gutters-x: 64px;
+
+    @media screen and (max-width: 700px) {
+        --gutters-x: 16px;
+    }
+
+    @media screen and (max-width: 500px) {
+        --gutters-x: 0;
+    }
 }

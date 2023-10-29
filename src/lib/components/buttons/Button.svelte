@@ -1,17 +1,24 @@
 <script lang="ts">
   export let testId: string = "";
   type ButtonVariant = "primary" | "secondary";
+  type ButtonSize = "small" | "medium" | "large";
   export let variant: ButtonVariant = "primary";
+  export let size: ButtonSize = "medium";
   export let href: string = undefined;
+  export let onClick: (event: Event) => void = () => {
+  };
 
 </script>
 
 {#if href}
-  <a href={href}
-     class="button"
-     class:button-secondary={variant === "secondary"}
-     class:button-primary={variant === "primary"}
-     data-testid={testId}
+  <a
+    href={href}
+    class="button"
+    class:button-secondary={variant === "secondary"}
+    class:button-primary={variant === "primary"}
+    class:button-small={size === "small"}
+    class:button-large={size === "large"}
+    data-testid={testId}
   >
     <slot></slot>
   </a>
@@ -20,7 +27,10 @@
     class="button"
     class:button-secondary={variant === "secondary"}
     class:button-primary={variant === "primary"}
+    class:button-small={size === "small"}
+    class:button-large={size === "large"}
     data-testid={testId}
+    on:click={onClick}
   >
     <slot />
   </button>
@@ -33,6 +43,15 @@
         text-decoration: none;
         font-family: var(--font-family-primary);
         font-size: var(--font-size-medium);
+    }
+
+    .button-small {
+        padding: 4px 8px;
+        font-size: var(--font-size-small);
+    }
+
+    .button-large {
+        padding: 12px 24px;
     }
 
     .button:disabled {

@@ -10,8 +10,6 @@
     if (browser)
       storageProvider = localStorage;
   });
-
-
 </script>
 
 {#if !!storageProvider}
