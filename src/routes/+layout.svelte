@@ -13,7 +13,7 @@
   {#if (!!storageProvider)}
     <Header storageProvider={storageProvider} />
   {/if}
-  <div class="main-content">
+  <div id="content" class="main-content">
     <slot />
   </div>
 </main>

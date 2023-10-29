@@ -19,7 +19,11 @@
 </script>
 
 <nav data-testid="header">
+  <a class="skip-to-content" href="#content" data-testid="header__skip-content-link">
+    Skip To Content
+  </a>
   <a href="/" data-testid="header__home-link">Home</a>
+
 
   {#if !isLoggedIn}
     <HeaderRegisterForm storageProvider={storageProvider} />
@@ -41,5 +45,16 @@
         height: var(--header-height);
         background-color: var(--color-sea);
         color: var(--color-font-light);
+    }
+
+    .skip-to-content {
+        position: absolute;
+        top: 0;
+        left: 0;
+        opacity: 0;
+    }
+
+    .skip-to-content:focus {
+        opacity: 1;
     }
 </style>

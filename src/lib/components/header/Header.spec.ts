@@ -33,6 +33,12 @@ describe('Header', () => {
 		expect(nav).toBeInTheDocument();
 	});
 
+	it('contains a skip to content link', () => {
+		let skipLink = result.getByTestId('header__skip-content-link');
+
+		expect(skipLink).toHaveAttribute('href', '#content');
+	});
+
 	it('contains a link to home', () => {
 		let link = result.getByTestId('header__home-link');
 
