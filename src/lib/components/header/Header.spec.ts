@@ -80,7 +80,7 @@ describe('Header', () => {
 			let button = result.getByTestId('header__refresh-button');
 
 			let mockFetch = MockFetch([testApiData]);
-			fireEvent.click(button);
+			await fireEvent.click(button);
 
 			await waitFor(() => {
 				expect(mockFetch).toHaveBeenCalled();
