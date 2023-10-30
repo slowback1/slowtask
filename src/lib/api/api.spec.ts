@@ -165,5 +165,17 @@ describe('API', () => {
 
 			expect(decodedBody).toEqual({ key: encodedUser, task_data: {} });
 		});
+
+		it('has the correct content-type header', async () => {
+			let mockFetch = MockFetch({});
+
+			let result = await api.CreateUser('u', 'p', {});
+
+			let [_, options] = mockFetch.mock.lastCall;
+
+			let contentTypeHeader = options.headers['Content-Type'];
+
+			expect(contentTypeHeader).toEqual('application/json');
+		});
 	});
 });

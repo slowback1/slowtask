@@ -16,7 +16,7 @@ export type ApiConfig = {
 
 export type ApiData = {
 	created_at?: string;
-	task_data: string;
+	task_data: any;
 	key: string;
 };
 

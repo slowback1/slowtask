@@ -1,6 +1,12 @@
 import type { ApiConfig, ApiData } from '$lib/types';
 import UserEncoder from '$lib/api/userEncoder';
 
+enum ApiParsingType {
+	None,
+	Json,
+	Text
+}
+
 export default class API {
 	static api_config_promise: Promise<ApiConfig>;
 
@@ -17,16 +23,26 @@ export default class API {
 		return await API.api_config_promise;
 	}
 
-	private async Request(urlSuffix: string, body: Partial<RequestInit> = {}) {
+	private async Request(
+		urlSuffix: string,
+		body: Partial<RequestInit> = {},
+		parsingType: ApiParsingType = ApiParsingType.Json
+	) {
 		let config = await this.getApiConfig();
 
 		return fetch(`${config.api_url}${urlSuffix}`, {
 			...body,
 			headers: {
 				Authorization: `Bearer ${config.auth_token}`,
-				apikey: config.api_key
+				apikey: config.api_key,
+				'Content-Type': 'application/json'
 			}
-		}).then((res) => res.json());
+		}).then((res) => {
+			if (parsingType === ApiParsingType.Json) return res.json();
+			if (parsingType === ApiParsingType.Text) return res.text();
+
+			return Promise.resolve({});
+		});
 	}
 
 	public async Login(username: string, password: string): Promise<ApiData[]> {
@@ -56,6 +72,6 @@ export default class API {
 			})
 		};
 
-		return this.Request(url, requestBody);
+		return this.Request(url, requestBody, ApiParsingType.None);
 	}
 }

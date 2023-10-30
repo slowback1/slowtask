@@ -1,7 +1,6 @@
 <script lang="ts">
   import Button from "$lib/components/buttons/Button.svelte";
   import type IStorageProvider from "$lib/store/IStorageProvider";
-  import UserStore from "$lib/store/userStore";
   import LoginService from "$lib/services/loginService";
   import TextBox from "$lib/components/inputs/TextBox.svelte";
 
@@ -14,7 +13,9 @@
   async function onSubmit() {
     let loginService = new LoginService(storageProvider);
 
-    await loginService.logIn(username, password);
+    await loginService.register(username, password);
+
+    window.location.reload();
   }
 </script>
 <div class="header__register">
@@ -24,7 +25,7 @@
   <form class="header__register-form" on:submit={onSubmit} data-testid="header__register-form">
     <TextBox bind:value={username} label="Username" type="string" id="header__register-username" />
     <TextBox bind:value={password} label="Password" type="password" id="header__register-password" />
-    <Button size="small" testId="header__register-submit" variant="primary" onClick={onSubmit}>
+    <Button size="small" testId="header__register-submit" variant="primary">
       Register
     </Button>
   </form>

@@ -3,6 +3,7 @@ import API from '$lib/api/api';
 import UserStore from '$lib/store/userStore';
 import TaskStore from '$lib/store/taskStore';
 import type { ApiData, ApiPayloadV1_0_0 } from '$lib/types';
+import UserPayloadGenerator from '$lib/services/userPayloadGenerator';
 
 export default class LoginService {
 	constructor(private storageProvider: IStorageProvider) {}
@@ -29,6 +30,19 @@ export default class LoginService {
 		}
 
 		this.updateTaskData(data);
+	}
+
+	async register(username: string, password: string) {
+		let api = new API();
+
+		let payload = new UserPayloadGenerator(this.storageProvider).generatePayload(
+			username,
+			password
+		);
+
+		await api.CreateUser(username, password, payload);
+
+		await this.logIn(username, password);
 	}
 
 	private async getUpdatedUserData() {
@@ -63,7 +77,7 @@ export default class LoginService {
 	}
 
 	private updateTaskData(data: ApiData) {
-		let taskData = JSON.parse(data.task_data) as ApiPayloadV1_0_0;
+		let taskData = data.task_data as ApiPayloadV1_0_0;
 
 		let taskStore = new TaskStore(this.storageProvider);
 

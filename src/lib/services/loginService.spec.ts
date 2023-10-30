@@ -64,6 +64,26 @@ describe('Login Service', () => {
 		});
 	});
 
+	describe('registering a user', () => {
+		beforeEach(() => {
+			mockFetch = MockFetch([testApiData]);
+		});
+
+		it('can register a user', async () => {
+			let result = await loginService.register('username', 'password');
+
+			expect(mockFetch).toHaveBeenCalled();
+		});
+
+		it('after registering the user logs the user in automatically', async () => {
+			let result = await loginService.register('username', 'password');
+
+			let storedUser = new UserStore(storageProvider).get();
+
+			expect(storedUser).toBeDefined();
+		});
+	});
+
 	describe('grabbing updated user data', () => {
 		beforeEach(() => {
 			new UserStore(storageProvider).add({ key: 'test key' });
