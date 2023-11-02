@@ -2,34 +2,38 @@ import type { RenderResult } from '@testing-library/svelte';
 import TaskPage from '$lib/pages/TaskPage.svelte';
 import { afterEach, beforeEach } from 'vitest';
 import { act, fireEvent, render, waitFor } from '@testing-library/svelte';
-import TaskStore from '$lib/store/taskStore';
 import getLocalStorageMock from '../../testHelpers/localStorageMock';
 import { testTask } from '../../testHelpers/testTask';
 import type { Task } from '$lib/types';
-import STORAGE_KEYS from '$lib/store/storageKeys';
+import MessageBus from '$lib/bus/MessageBus';
+import { Messages } from '$lib/bus/Messages';
+import TaskService from '$lib/services/taskService';
 
 let storageMock = getLocalStorageMock();
 
 describe('TaskPage', () => {
 	let result: RenderResult<TaskPage>;
 
-	function renderComponent(tasks: Task[] = []) {
+	afterEach(() => {
+		MessageBus.clear(Messages.TaskData);
+	});
+
+	function renderComponent() {
 		if (result) result.unmount();
 
-		result = render(TaskPage, { props: { storageProvider: storageMock, tasks: tasks } });
+		result = render(TaskPage);
 	}
 
 	beforeEach(() => {
-		storageMock.setItem(STORAGE_KEYS.TASKS, undefined);
 		renderComponent();
 	});
 
 	function addTestTask() {
-		let store = new TaskStore(storageMock);
+		let store = new TaskService();
 
 		store.add(testTask);
 
-		renderComponent(store.get());
+		renderComponent();
 	}
 
 	it('contains a container list', () => {
@@ -38,7 +42,7 @@ describe('TaskPage', () => {
 		expect(taskList).toBeTruthy();
 	});
 
-	it('displays the text of the task when there is a task', () => {
+	it('displays the text of the task when there is a task', async () => {
 		addTestTask();
 
 		expect(result.getByText(testTask.name)).toBeTruthy();
@@ -53,7 +57,9 @@ describe('TaskPage', () => {
 
 		fireEvent.click(button);
 
-		expect(storageMock.getItem(STORAGE_KEYS.TASKS).length).toBeGreaterThan(0);
+		let currentValue = MessageBus.getLastMessage<Task[]>(Messages.TaskData);
+
+		expect(currentValue.length).toBeGreaterThan(0);
 	});
 
 	async function toggleEditModeForFirstTask() {
@@ -75,14 +81,14 @@ describe('TaskPage', () => {
 		addTestTask();
 		await toggleEditModeForFirstTask();
 
-		let beforeTaskCount = JSON.parse(storageMock.getItem(STORAGE_KEYS.TASKS)).length;
+		let beforeTaskCount = 1;
 
 		let deleteButton = result.getByTestId('task-item__delete');
 		await fireEvent.click(deleteButton);
 
-		let afterTaskCount = JSON.parse(storageMock.getItem(STORAGE_KEYS.TASKS)).length;
+		let afterTaskCount = MessageBus.getLastMessage<Task[]>(Messages.TaskData).length;
 
-		expect(afterTaskCount + 1).toEqual(beforeTaskCount);
+		expect(beforeTaskCount).greaterThan(afterTaskCount);
 	});
 
 	it('clicking the toggle complete button toggles the completed status of the task', async () => {
@@ -92,7 +98,7 @@ describe('TaskPage', () => {
 
 		await fireEvent.click(toggle);
 
-		let firstTask: Task = JSON.parse(storageMock.getItem(STORAGE_KEYS.TASKS))[0];
+		let firstTask: Task = MessageBus.getLastMessage<Task[]>(Messages.TaskData)[0];
 
 		expect(firstTask.isCompleted).toEqual(true);
 	});
@@ -105,7 +111,7 @@ describe('TaskPage', () => {
 		await fireEvent.click(toggle);
 		await fireEvent.click(toggle);
 
-		let firstTask: Task = JSON.parse(storageMock.getItem(STORAGE_KEYS.TASKS))[0];
+		let firstTask: Task = MessageBus.getLastMessage(Messages.TaskData)[0];
 
 		expect(firstTask.isCompleted).toEqual(false);
 	});

@@ -1,20 +1,19 @@
 <script lang="ts">
-  import TaskContext from "$lib/context/TaskContext";
   import { onMount } from "svelte";
-  import { browser } from "$app/environment";
   import type { Task } from "$lib/types";
-  import type IStorageProvider from "$lib/store/IStorageProvider";
   import TaskItem from "$lib/components/tasks/TaskItem.svelte";
+  import MessageBus from "$lib/bus/MessageBus";
+  import { Messages } from "$lib/bus/Messages";
+  import TaskService from "$lib/services/taskService";
 
-  export let storageProvider: IStorageProvider;
 
-  export let tasks: Task[] = [];
-  let context: TaskContext;
+  let tasks: Task[] = MessageBus.getLastMessage(Messages.TaskData) ?? [];
 
-  context = TaskContext.Create(storageProvider);
+  const taskService = new TaskService();
+
 
   onMount(() => {
-    let unsubscribe = context.subscribe(t => tasks = t);
+    let unsubscribe = MessageBus.subscribe<Task[]>(Messages.TaskData, (value) => tasks = value ?? []);
 
     return () => {
       unsubscribe();
@@ -22,7 +21,7 @@
   });
 
   function addTask() {
-    context.add({
+    taskService.add({
       taskId: "",
       name: "test task",
       isCompleted: false,
@@ -32,18 +31,18 @@
   }
 
   function updateTask(task: Task) {
-    context.update(task.taskId, task);
+    taskService.update(task.taskId, task);
   }
 
   function deleteTask(taskId: string) {
-    context.delete(taskId);
+    taskService.delete(taskId);
   }
 
   function toggleCompletion(taskId: string) {
     let task = tasks.find(t => t.taskId === taskId);
     task.isCompleted = !task.isCompleted;
 
-    context.update(taskId, task);
+    taskService.update(taskId, task);
   }
 </script>
 

@@ -1,10 +1,10 @@
-import type IStorageProvider from '$lib/store/IStorageProvider';
 import type { ApiPayloadV1_0_0, IApiPayload } from '$lib/types';
 import UserEncoder from '$lib/api/userEncoder';
-import TaskStore from '$lib/store/taskStore';
+import MessageBus from '$lib/bus/MessageBus';
+import { Messages } from '$lib/bus/Messages';
 
 export default class UserPayloadGenerator {
-	constructor(private storageProvder: IStorageProvider) {}
+	constructor() {}
 
 	generatePayload(username: string, password: string): IApiPayload {
 		let key = this.getUserKey(username, password);
@@ -20,7 +20,7 @@ export default class UserPayloadGenerator {
 	}
 
 	private generateV1_0_0Payload(payload: IApiPayload): ApiPayloadV1_0_0 {
-		let tasks = new TaskStore(this.storageProvder).get();
+		let tasks = MessageBus.getLastMessage(Messages.TaskData) ?? [];
 
 		return {
 			...payload,

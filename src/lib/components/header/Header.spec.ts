@@ -1,19 +1,22 @@
 import type { RenderResult } from '@testing-library/svelte';
 import Header from '$lib/components/header/Header.svelte';
-import { beforeEach } from 'vitest';
+import { afterEach, beforeEach } from 'vitest';
 import { fireEvent, render, waitFor } from '@testing-library/svelte';
 import type IStorageProvider from '$lib/store/IStorageProvider';
 import getLocalStorageMock from '../../../testHelpers/localStorageMock';
-import STORAGE_KEYS from '$lib/store/storageKeys';
-import UserStore from '$lib/store/userStore';
 import { MockFetch } from '../../../testHelpers/mockFetch';
 import { testApiData } from '../../../testHelpers/testApiData';
-import TaskStore from '$lib/store/taskStore';
 import { testTask } from '../../../testHelpers/testTask';
+import MessageBus from '$lib/bus/MessageBus';
+import { Messages } from '$lib/bus/Messages';
 
 describe('Header', () => {
 	let result: RenderResult<Header>;
 	let storageProvider: IStorageProvider;
+
+	afterEach(() => {
+		MessageBus.clear(Messages.UserData);
+	});
 
 	function renderComponent() {
 		if (result) result.unmount();
@@ -47,7 +50,8 @@ describe('Header', () => {
 
 	describe('when the user is not logged in', () => {
 		beforeEach(() => {
-			storageProvider.setItem(STORAGE_KEYS.USER, '');
+			MessageBus.clear(Messages.UserData);
+
 			renderComponent();
 		});
 
@@ -60,7 +64,8 @@ describe('Header', () => {
 
 	describe('when the user is logged in', () => {
 		beforeEach(() => {
-			new UserStore(storageProvider).add({ key: 'user' });
+			MessageBus.sendMessage(Messages.UserData, { key: 'abcd' });
+
 			renderComponent();
 		});
 
@@ -85,8 +90,7 @@ describe('Header', () => {
 			await waitFor(() => {
 				expect(mockFetch).toHaveBeenCalled();
 
-				let taskStore = new TaskStore(storageProvider);
-				expect(taskStore.get()).toEqual([testTask]);
+				expect(MessageBus.getLastMessage(Messages.TaskData)).toEqual([testTask]);
 			});
 		});
 	});

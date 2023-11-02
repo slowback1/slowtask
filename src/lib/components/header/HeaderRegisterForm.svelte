@@ -1,17 +1,14 @@
 <script lang="ts">
   import Button from "$lib/components/buttons/Button.svelte";
-  import type IStorageProvider from "$lib/store/IStorageProvider";
   import LoginService from "$lib/services/loginService";
   import TextBox from "$lib/components/inputs/TextBox.svelte";
 
-
-  export let storageProvider: IStorageProvider;
 
   let username: string = "";
   let password: string = "";
 
   async function onSubmit() {
-    let loginService = new LoginService(storageProvider);
+    let loginService = new LoginService();
 
     await loginService.register(username, password);
 

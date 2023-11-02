@@ -1,24 +1,28 @@
-import { beforeEach, expect, type Mock, vi } from 'vitest';
+import { beforeAll, beforeEach, expect, type Mock, vi } from 'vitest';
 import { MockFetch } from '../../testHelpers/mockFetch';
 import { testApiData } from '../../testHelpers/testApiData';
 import LoginService from '$lib/services/loginService';
-import type IStorageProvider from '$lib/store/IStorageProvider';
-import getLocalStorageMock from '../../testHelpers/localStorageMock';
-import UserStore from '$lib/store/userStore';
-import TaskStore from '$lib/store/taskStore';
 import { testTask } from '../../testHelpers/testTask';
 import { testApiPayloadV1_0_0 } from '../../testHelpers/testApiPayloads';
+import MessageBus from '$lib/bus/MessageBus';
+import { Messages } from '$lib/bus/Messages';
+import type { Task, UserStoreType } from '$lib/types';
 
 describe('Login Service', () => {
 	let mockFetch: Mock;
-	let storageProvider: IStorageProvider;
 	let loginService: LoginService;
+	let currentUserData: UserStoreType;
+	let currentTaskData: Task[] = [];
+
+	beforeAll(() => {
+		MessageBus.subscribe(Messages.UserData, (value) => (currentUserData = value));
+		MessageBus.subscribe(Messages.TaskData, (value) => (currentTaskData = value ?? []));
+	});
 
 	beforeEach(() => {
 		mockFetch = MockFetch([testApiData]);
-		storageProvider = getLocalStorageMock();
 
-		loginService = new LoginService(storageProvider);
+		loginService = new LoginService();
 	});
 
 	describe('Logging in', () => {
@@ -31,15 +35,13 @@ describe('Login Service', () => {
 		it('updates the user store when logging in with a valid user/pass', async () => {
 			let result = await loginService.logIn('username', 'password');
 
-			let storedUser = new UserStore(storageProvider).get();
-
-			expect(storedUser.key).toEqual(testApiData.key);
+			expect(currentUserData.key).toEqual(testApiData.key);
 		});
 
 		it('updates the task store when logging in with a valid user/pass', async () => {
 			let result = await loginService.logIn('username', 'password');
 
-			let storedTasks = new TaskStore(storageProvider).get();
+			let storedTasks = currentTaskData;
 
 			expect(storedTasks.length).toEqual(1);
 			expect(storedTasks[0]).toEqual(testTask);
@@ -78,15 +80,13 @@ describe('Login Service', () => {
 		it('after registering the user logs the user in automatically', async () => {
 			let result = await loginService.register('username', 'password');
 
-			let storedUser = new UserStore(storageProvider).get();
-
-			expect(storedUser).toBeDefined();
+			expect(currentUserData.key).toEqual(testApiData.key);
 		});
 	});
 
 	describe('grabbing updated user data', () => {
 		beforeEach(() => {
-			new UserStore(storageProvider).add({ key: 'test key' });
+			MessageBus.sendMessage(Messages.UserData, { key: 'test key' });
 			mockFetch = MockFetch([testApiData]);
 		});
 
@@ -99,9 +99,7 @@ describe('Login Service', () => {
 		it('updates the task data after syncing', async () => {
 			await loginService.syncUpdatedData();
 
-			let taskStore = new TaskStore(storageProvider);
-
-			expect(taskStore.get()).toEqual(testApiPayloadV1_0_0.tasks);
+			expect(currentTaskData).toEqual(testApiPayloadV1_0_0.tasks);
 		});
 
 		describe("when the user doesn't exist", () => {
@@ -118,9 +116,9 @@ describe('Login Service', () => {
 			it('clears the user data', async () => {
 				await loginService.syncUpdatedData();
 
-				let user = new UserStore(storageProvider).get();
+				let user = currentUserData;
 
-				expect(user).toBeUndefined();
+				expect(user).toBeNull();
 			});
 		});
 	});

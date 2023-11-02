@@ -1,18 +1,16 @@
 <script lang="ts">
-  import type IStorageProvider from "$lib/store/IStorageProvider";
   import Header from "$lib/components/header/Header.svelte";
   import { onMount } from "svelte";
+  import MessageBus from "$lib/bus/MessageBus";
+  import getRealStorageProvider from "$lib/store/realStorageProvider";
 
-  let storageProvider: IStorageProvider;
 
   onMount(() => {
-    storageProvider = localStorage;
+    MessageBus.initialize(getRealStorageProvider());
   });
 </script>
 <main>
-  {#if (!!storageProvider)}
-    <Header storageProvider={storageProvider} />
-  {/if}
+  <Header />
   <div id="content" class="main-content">
     <slot />
   </div>

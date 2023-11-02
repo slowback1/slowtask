@@ -1,5 +1,4 @@
 import { beforeEach } from 'vitest';
-import STORAGE_KEYS from '$lib/store/storageKeys';
 import { fireEvent, render, type RenderResult, waitFor } from '@testing-library/svelte';
 import { MockFetch } from '../../../testHelpers/mockFetch';
 import type IStorageProvider from '$lib/store/IStorageProvider';

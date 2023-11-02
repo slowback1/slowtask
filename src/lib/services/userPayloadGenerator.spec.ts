@@ -3,18 +3,17 @@ import { beforeEach, expect } from 'vitest';
 import getLocalStorageMock from '../../testHelpers/localStorageMock';
 import UserPayloadGenerator from '$lib/services/userPayloadGenerator';
 import UserEncoder from '$lib/api/userEncoder';
-import TaskStore from '$lib/store/taskStore';
 import { testTask } from '../../testHelpers/testTask';
-import type { ApiPayloadV1_0_0 } from '$lib/types';
+import type { ApiPayloadV1_0_0, Task } from '$lib/types';
+import TaskService from '$lib/services/taskService';
+import MessageBus from '$lib/bus/MessageBus';
+import { Messages } from '$lib/bus/Messages';
 
 describe('UserPayloadGenerator', () => {
-	let storageProvider: IStorageProvider;
 	let generator: UserPayloadGenerator;
 
 	beforeEach(() => {
-		storageProvider = getLocalStorageMock();
-
-		generator = new UserPayloadGenerator(storageProvider);
+		generator = new UserPayloadGenerator();
 	});
 
 	it('can generate a payload when there are no task data', () => {
@@ -31,7 +30,9 @@ describe('UserPayloadGenerator', () => {
 	});
 
 	function addTestTaskToStore() {
-		new TaskStore(storageProvider).add(testTask);
+		let taskService = new TaskService();
+
+		taskService.add(testTask);
 	}
 
 	it('appends the task data for a v1.0.0 payload', () => {
@@ -39,7 +40,7 @@ describe('UserPayloadGenerator', () => {
 
 		let data = generator.generatePayload('u', 'p') as ApiPayloadV1_0_0;
 
-		let storedTasks = new TaskStore(storageProvider).get();
+		let storedTasks = MessageBus.getLastMessage<Task[]>(Messages.TaskData);
 
 		expect(data.tasks).toEqual(storedTasks);
 	});

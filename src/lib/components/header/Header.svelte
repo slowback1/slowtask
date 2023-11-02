@@ -1,21 +1,25 @@
 <script lang="ts">
-  import type IStorageProvider from "$lib/store/IStorageProvider";
-  import UserStore from "$lib/store/userStore";
   import HeaderRegisterForm from "$lib/components/header/HeaderRegisterForm.svelte";
   import Button from "$lib/components/buttons/Button.svelte";
   import LoginService from "$lib/services/loginService";
+  import { onMount } from "svelte";
+  import MessageBus from "$lib/bus/MessageBus";
+  import { Messages } from "$lib/bus/Messages";
 
-  export let storageProvider: IStorageProvider;
+  let isLoggedIn = !!MessageBus.getLastMessage(Messages.UserData);
 
-  let userStore = new UserStore(storageProvider);
-
-  let isLoggedIn = userStore.get() !== undefined;
 
   async function onRefresh() {
-    let loginService = new LoginService(storageProvider);
+    let loginService = new LoginService();
 
     await loginService.syncUpdatedData();
   }
+
+  onMount(() => {
+    let unsubscribe = MessageBus.subscribe(Messages.UserData, value => isLoggedIn = !!value);
+
+    return () => unsubscribe();
+  });
 </script>
 
 <nav data-testid="header">
@@ -26,7 +30,7 @@
 
 
   {#if !isLoggedIn}
-    <HeaderRegisterForm storageProvider={storageProvider} />
+    <HeaderRegisterForm />
   {:else}
     <Button size="small" onClick={onRefresh} testId="header__refresh-button">
       Refresh

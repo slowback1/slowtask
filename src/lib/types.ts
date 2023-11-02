@@ -28,3 +28,7 @@ export interface IApiPayload {
 export interface ApiPayloadV1_0_0 extends IApiPayload {
 	tasks: Task[];
 }
+
+export type UserStoreType = {
+	key: string;
+};

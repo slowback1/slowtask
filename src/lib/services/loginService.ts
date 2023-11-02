@@ -1,12 +1,11 @@
-import type IStorageProvider from '$lib/store/IStorageProvider';
 import API from '$lib/api/api';
-import UserStore from '$lib/store/userStore';
-import TaskStore from '$lib/store/taskStore';
 import type { ApiData, ApiPayloadV1_0_0 } from '$lib/types';
 import UserPayloadGenerator from '$lib/services/userPayloadGenerator';
+import MessageBus from '$lib/bus/MessageBus';
+import { Messages } from '$lib/bus/Messages';
 
 export default class LoginService {
-	constructor(private storageProvider: IStorageProvider) {}
+	constructor() {}
 
 	errorMessage: string = '';
 
@@ -25,7 +24,7 @@ export default class LoginService {
 		let data = await this.getUpdatedUserData();
 
 		if (!data) {
-			new UserStore(this.storageProvider).clear();
+			MessageBus.clear(Messages.UserData);
 			return;
 		}
 
@@ -35,10 +34,7 @@ export default class LoginService {
 	async register(username: string, password: string) {
 		let api = new API();
 
-		let payload = new UserPayloadGenerator(this.storageProvider).generatePayload(
-			username,
-			password
-		);
+		let payload = new UserPayloadGenerator().generatePayload(username, password);
 
 		await api.CreateUser(username, password, payload);
 
@@ -47,9 +43,10 @@ export default class LoginService {
 
 	private async getUpdatedUserData() {
 		let api = new API();
-		let userStore = new UserStore(this.storageProvider);
 
-		let result = await api.Sync(userStore.get().key);
+		let currentUser = MessageBus.getLastMessage(Messages.UserData);
+
+		let result = await api.Sync(currentUser.key);
 
 		if (!this.isResultSuccessful(result)) return null;
 
@@ -72,16 +69,13 @@ export default class LoginService {
 	}
 
 	private updateUserData(data: ApiData) {
-		let userStore = new UserStore(this.storageProvider);
-		userStore.add({ key: data.key });
+		MessageBus.sendMessage(Messages.UserData, { key: data.key });
 	}
 
 	private updateTaskData(data: ApiData) {
 		let taskData = data.task_data as ApiPayloadV1_0_0;
 
-		let taskStore = new TaskStore(this.storageProvider);
-
-		taskStore.setTasks(taskData.tasks);
+		MessageBus.sendMessage(Messages.TaskData, taskData.tasks);
 	}
 
 	private isResultSuccessful(data: ApiData[]) {
