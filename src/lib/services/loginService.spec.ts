@@ -132,6 +132,12 @@ describe('Login Service', () => {
 			expect(currentTaskData).toEqual(testApiPayloadV1_0_0.tasks);
 		});
 
+		it('updates the message bus indicating that the data has been synced', async () => {
+			await loginService.syncUpdatedData();
+
+			expect(MessageBus.getLastMessage(Messages.DataIsSyncing)).toEqual(false);
+		});
+
 		describe("when the user doesn't exist", () => {
 			beforeEach(() => {
 				MockFetch([]);

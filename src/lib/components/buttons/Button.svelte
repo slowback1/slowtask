@@ -47,6 +47,7 @@
         text-decoration: none;
         font-family: var(--font-family-primary);
         font-size: var(--font-size-medium);
+        transition: background-color 0.5s ease-in-out;
     }
 
     .button:hover {
@@ -69,11 +70,10 @@
     .button-primary {
         background-color: var(--color-yale-blue);
         color: var(--color-nyanza);
-        transition: background-color 0.5s ease-in-out;
         border-color: var(--color-nyanza);
     }
 
-    .button-primary:hover {
+    .button-primary:hover, .button-primary:focus {
         background-color: var(--color-yale-blue-highlight);
     }
 
@@ -83,7 +83,7 @@
         border-color: var(--color-nyanza);
     }
 
-    .button-secondary:hover {
+    .button-secondary:hover, .button-secondary:focus {
         background-color: var(--color-nyanza);
         color: var(--color-rich-blue);
     }

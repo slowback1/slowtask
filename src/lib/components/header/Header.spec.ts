@@ -94,6 +94,14 @@ describe('Header', () => {
 			});
 		});
 
+		it('clicking the refresh button updates the DataIsSyncing message', () => {
+			let button = result.getByTestId('header__refresh-button');
+
+			fireEvent.click(button);
+
+			expect(MessageBus.getLastMessage(Messages.DataIsSyncing)).toEqual(true);
+		});
+
 		it('has a log out button', () => {
 			let button = result.getByTestId('header__log-out-button');
 

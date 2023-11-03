@@ -21,6 +21,7 @@ export default class LoginService {
 	}
 
 	async syncUpdatedData() {
+		this.sendDataSyncingMessage(true);
 		let data = await this.getUpdatedUserData();
 
 		if (!data) {
@@ -29,6 +30,7 @@ export default class LoginService {
 		}
 
 		this.updateTaskData(data);
+		this.sendDataSyncingMessage(false);
 	}
 
 	async register(username: string, password: string) {
@@ -85,5 +87,9 @@ export default class LoginService {
 
 	private isResultSuccessful(data: ApiData[]) {
 		return data.length > 0;
+	}
+
+	private sendDataSyncingMessage(value: boolean) {
+		MessageBus.sendMessage(Messages.DataIsSyncing, value);
 	}
 }

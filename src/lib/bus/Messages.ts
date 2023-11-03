@@ -1,4 +1,5 @@
 export const Messages = {
 	TaskData: 'TaskData',
-	UserData: 'UserData'
+	UserData: 'UserData',
+	DataIsSyncing: 'DataIsSyncing'
 };
