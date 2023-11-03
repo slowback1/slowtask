@@ -21,7 +21,7 @@ describe('Header', () => {
 	function renderComponent() {
 		if (result) result.unmount();
 
-		result = render(Header, { props: { storageProvider: storageProvider } });
+		result = render(Header);
 	}
 
 	beforeEach(() => {

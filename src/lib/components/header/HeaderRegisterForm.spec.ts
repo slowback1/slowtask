@@ -12,7 +12,7 @@ describe('when the user is not logged in', () => {
 	function renderComponent() {
 		if (result) result.unmount();
 
-		result = render(HeaderRegisterForm, { props: { storageProvider: storageProvider } });
+		result = render(HeaderRegisterForm);
 	}
 
 	beforeEach(() => {
