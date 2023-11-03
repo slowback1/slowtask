@@ -93,5 +93,15 @@ describe('Header', () => {
 				expect(MessageBus.getLastMessage(Messages.TaskData)).toEqual([testTask]);
 			});
 		});
+
+		it('has a log out button', () => {
+			let button = result.getByTestId('header__log-out-button');
+
+			fireEvent.click(button);
+
+			let lastUserValue = MessageBus.getLastMessage(Messages.UserData);
+
+			expect(lastUserValue).toEqual(null);
+		});
 	});
 });

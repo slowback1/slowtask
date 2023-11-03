@@ -48,6 +48,12 @@ export default class MessageBus {
 		this.sendMessage(message, null);
 	}
 
+	static clearAll() {
+		let messages = Object.keys(this.messageLog);
+
+		messages.forEach((message) => this.clear(message));
+	}
+
 	static getLastMessage<T = any>(message: string): T | null {
 		return this.messageLog[message];
 	}

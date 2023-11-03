@@ -15,6 +15,12 @@
     await loginService.syncUpdatedData();
   }
 
+  function onLogOut() {
+    let loginService = new LoginService();
+
+    loginService.logOut();
+  }
+
   onMount(() => {
     let unsubscribe = MessageBus.subscribe(Messages.UserData, value => isLoggedIn = !!value);
 
@@ -34,6 +40,9 @@
   {:else}
     <Button size="small" onClick={onRefresh} testId="header__refresh-button">
       Refresh
+    </Button>
+    <Button variant="secondary" size="small" onClick={onLogOut} testId="header__log-out-button">
+      Log Out
     </Button>
   {/if}
 </nav>

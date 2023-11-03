@@ -66,6 +66,36 @@ describe('Login Service', () => {
 		});
 	});
 
+	describe('Logging out', () => {
+		beforeEach(async () => {
+			await loginService.logIn('test', 'password');
+		});
+
+		it('can log the user out', () => {
+			loginService.logOut();
+
+			let userData = MessageBus.getLastMessage(Messages.UserData);
+
+			expect(userData).toEqual(null);
+		});
+
+		it('logging the user out clears out all data', () => {
+			MessageBus.sendMessage('something', 'value');
+
+			loginService.logOut();
+
+			let lastValue = MessageBus.getLastMessage('something');
+
+			expect(lastValue).toEqual(null);
+		});
+
+		it('logging the user out redirects to home', () => {
+			loginService.logOut();
+
+			expect(window.location.href).toEqual('http://localhost:3000/');
+		});
+	});
+
 	describe('registering a user', () => {
 		beforeEach(() => {
 			mockFetch = MockFetch([testApiData]);

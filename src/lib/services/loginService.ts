@@ -41,6 +41,11 @@ export default class LoginService {
 		await this.logIn(username, password);
 	}
 
+	logOut() {
+		MessageBus.clearAll();
+		window.location.href = '/';
+	}
+
 	private async getUpdatedUserData() {
 		let api = new API();
 

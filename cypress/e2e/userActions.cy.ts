@@ -25,17 +25,15 @@ describe('User Actions', () => {
 	});
 
 	describe('Logging user out', () => {
-		beforeEach(() => {
-			pageObject.registerUser();
-		});
-
 		it('can log out of a user', () => {
+			pageObject.registerUser();
 			pageObject.clickLogOutButton();
 
 			pageObject.verifyThatUserIsLoggedOut();
 		});
 
 		it('logging out clears out the task data', () => {
+			pageObject.registerUser();
 			let taskPage = new OneOffTaskDsl();
 
 			taskPage.visit();

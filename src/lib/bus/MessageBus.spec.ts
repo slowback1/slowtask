@@ -115,4 +115,17 @@ describe('MessageBus', () => {
 		expect(value).toBeTypeOf('object');
 		expect(value.name).toEqual('value');
 	});
+
+	it('can clear all of the data in the message bus', () => {
+		MessageBus.sendMessage('message_1', 'value');
+		MessageBus.sendMessage('message_2', 'value 2');
+
+		MessageBus.clearAll();
+
+		let firstValue = MessageBus.getLastMessage('message_1');
+		let secondValue = MessageBus.getLastMessage('message_2');
+
+		expect(firstValue).toEqual(null);
+		expect(secondValue).toEqual(null);
+	});
 });

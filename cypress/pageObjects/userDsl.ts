@@ -11,8 +11,7 @@ export default class UserDsl extends DSL {
 	}
 
 	verifyThatUserIsLoggedOut() {
-		let refreshButton = cy.get("[data-testid='header__refresh-button']");
-		refreshButton.should('not.be.visible');
+		cy.get("[data-testid='header__refresh-button']").should('not.exist');
 	}
 
 	clickRefreshButton() {
@@ -33,7 +32,11 @@ export default class UserDsl extends DSL {
 		passwordField.type(password);
 
 		let submitButton = cy.get("[data-testid='header__register-submit']");
+		cy.intercept('Tasks*').as('getFromApi');
 		submitButton.click();
+
+		cy.wait('@getFromApi');
+		cy.wait('@getFromApi');
 	}
 
 	clickLogOutButton() {
