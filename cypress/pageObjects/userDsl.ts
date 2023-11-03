@@ -10,6 +10,11 @@ export default class UserDsl extends DSL {
 		refreshButton.should('be.visible');
 	}
 
+	verifyThatUserIsLoggedOut() {
+		let refreshButton = cy.get("[data-testid='header__refresh-button']");
+		refreshButton.should('not.be.visible');
+	}
+
 	clickRefreshButton() {
 		let refreshButton = cy.get("[data-testid='header__refresh-button']");
 
@@ -29,5 +34,9 @@ export default class UserDsl extends DSL {
 
 		let submitButton = cy.get("[data-testid='header__register-submit']");
 		submitButton.click();
+	}
+
+	clickLogOutButton() {
+		cy.get("[data-testid='header__log-out-button']").click();
 	}
 }
