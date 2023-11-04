@@ -1,6 +1,6 @@
 import API from '$lib/api/api';
 import type { ApiData, ApiPayloadV1_0_0 } from '$lib/types';
-import UserPayloadGenerator from '$lib/services/userPayloadGenerator';
+import UserPayloadGenerator from '$lib/utils/userPayloadGenerator';
 import MessageBus from '$lib/bus/MessageBus';
 import { Messages } from '$lib/bus/Messages';
 

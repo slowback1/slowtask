@@ -1,7 +1,7 @@
 import type IStorageProvider from '$lib/store/IStorageProvider';
 import { beforeEach, expect } from 'vitest';
 import getLocalStorageMock from '../../testHelpers/localStorageMock';
-import UserPayloadGenerator from '$lib/services/userPayloadGenerator';
+import UserPayloadGenerator from '$lib/utils/userPayloadGenerator';
 import UserEncoder from '$lib/api/userEncoder';
 import { testTask } from '../../testHelpers/testTask';
 import type { ApiPayloadV1_0_0, Task } from '$lib/types';
