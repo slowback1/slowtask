@@ -7,6 +7,13 @@
   };
   export let id = slugify(label);
   export let value = "";
+  let boundValue = "";
+
+  $: updateBound(value);
+
+  function updateBound(newValue: string) {
+    boundValue = newValue;
+  }
 
   const handleInput = e => {
     // in here, you can switch on type and implement
@@ -19,7 +26,7 @@
 
 </script>
 
-<label for={id}>
+<label data-testid={id + "-label"} for={id}>
   {label}
 </label>
-<input data-testid={id} {type} value={value} on:input={handleInput} on:change={onChange} {id} />
+<input data-testid={id} {type} value={boundValue} on:input={handleInput} on:change={onChange} {id} />

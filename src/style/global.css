@@ -13,6 +13,8 @@
     --color-flax: #e3d87e;
     --color-font-light: #fde3e3;
     --color-font-dark: #01091c;
+    --color-error-background: rgba(234, 177, 177, 0.55);
+    --color-error-font: #830606;
 
     --font-family-primary: "Montseratt", sans-serif;
     --font-size-large: 32px;

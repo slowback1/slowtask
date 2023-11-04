@@ -71,4 +71,13 @@ describe('TextBox', () => {
 
 		expect(input.value).toEqual('value');
 	});
+
+	it("the label has the given test id with '-label' appended to the end of it", () => {
+		renderComponent({ id: 'test-id', label: 'my cool label' });
+
+		let label = result.getByTestId('test-id-label');
+
+		expect(label).toBeInTheDocument();
+		expect(label).toHaveTextContent('my cool label');
+	});
 });

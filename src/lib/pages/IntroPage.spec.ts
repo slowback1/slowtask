@@ -18,16 +18,18 @@ describe('IntroPage', () => {
 	});
 
 	describe('the new user section', () => {
-		it('contains a new user section', () => {
-			let section = result.getByTestId('intro-page__new-user');
-			expect(section).toBeTruthy();
-			expect(section).toHaveClass('intro-page__new-user');
-		});
-
 		it('contains a link to start the app as a new user', () => {
-			let link = result.getByTestId('intro-page__new-user-button');
+			let link = result.getByTestId('intro-page__new-user-link');
 			expect(link).toBeTruthy();
 			expect(link.getAttribute('href')).toEqual('/task');
+		});
+	});
+
+	describe('the login form', () => {
+		it('contains a login form', () => {
+			let form = result.getByTestId('login-form');
+
+			expect(form).toBeInTheDocument();
 		});
 	});
 });

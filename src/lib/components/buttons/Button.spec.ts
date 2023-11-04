@@ -105,4 +105,20 @@ describe('Button', () => {
 
 		expect(button).toHaveClass('button-large');
 	});
+
+	it('can disable the button', () => {
+		renderComponent({ disabled: true });
+
+		let button = result.getByRole('button');
+
+		expect(button).toBeDisabled();
+	});
+
+	it('setting disabled to false means the button is enabled', () => {
+		renderComponent({ disabled: false });
+
+		let button = result.getByRole('button');
+
+		expect(button).not.toBeDisabled();
+	});
 });

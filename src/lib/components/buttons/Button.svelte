@@ -5,6 +5,7 @@
   export let variant: ButtonVariant = "primary";
   export let size: ButtonSize = "medium";
   export let href: string = undefined;
+  export let disabled: boolean = false;
   export let onClick: (event: Event) => void = () => {
   };
 
@@ -35,6 +36,7 @@
   <button
     {...props}
     on:click={onClick}
+    disabled="{disabled}"
   >
     <slot />
   </button>
