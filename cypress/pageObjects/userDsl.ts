@@ -5,6 +5,7 @@ export default class UserDsl extends DSL {
 
 	visit(): void {
 		cy.visit('/');
+		cy.wait(50);
 	}
 
 	verifyThatUserIsLoggedIn() {
@@ -28,7 +29,7 @@ export default class UserDsl extends DSL {
 		let password = this.password;
 
 		cy.wrap(username).as('username');
-
+		cy.wait(500);
 		let usernameField = cy.get("[data-testid='header__register-username']");
 		let passwordField = cy.get("[data-testid='header__register-password']");
 
@@ -45,6 +46,7 @@ export default class UserDsl extends DSL {
 
 	logIn() {
 		cy.get<string>('@username').then((username: string) => {
+			cy.wait(500);
 			cy.get("[data-testid='login-form__username']").type(username);
 		});
 		cy.get("[data-testid='login-form__password']").type(this.password);
