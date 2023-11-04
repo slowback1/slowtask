@@ -1,6 +1,8 @@
 import DSL from './dsl';
 
 export default class UserDsl extends DSL {
+	private readonly password = 'Password1!';
+
 	visit(): void {
 		cy.visit('/');
 	}
@@ -23,7 +25,9 @@ export default class UserDsl extends DSL {
 	registerUser() {
 		let timestamp = new Date().getTime();
 		let username = `username-${timestamp}`;
-		let password = `Password!1`;
+		let password = this.password;
+
+		cy.wrap(username).as('username');
 
 		let usernameField = cy.get("[data-testid='header__register-username']");
 		let passwordField = cy.get("[data-testid='header__register-password']");
@@ -37,6 +41,15 @@ export default class UserDsl extends DSL {
 
 		cy.wait('@getFromApi');
 		cy.wait('@getFromApi');
+	}
+
+	logIn() {
+		cy.get<string>('@username').then((username: string) => {
+			cy.get("[data-testid='login-form__username']").type(username);
+		});
+		cy.get("[data-testid='login-form__password']").type(this.password);
+
+		cy.get("[data-testid='login-form__submit']").click();
 	}
 
 	clickLogOutButton() {

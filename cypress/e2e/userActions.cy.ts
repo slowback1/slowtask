@@ -47,4 +47,15 @@ describe('User Actions', () => {
 			taskPage.validateTaskDoesNotExist('test task');
 		});
 	});
+
+	describe('Logging in', () => {
+		it('can log in as an already registered user', () => {
+			pageObject.registerUser();
+			pageObject.verifyThatUserIsLoggedIn();
+			pageObject.clickLogOutButton();
+			pageObject.verifyThatUserIsLoggedOut();
+			pageObject.logIn();
+			pageObject.verifyThatUserIsLoggedIn();
+		});
+	});
 });
