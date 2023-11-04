@@ -3,6 +3,7 @@ import DSL from './dsl';
 export default class OneOffTaskDsl extends DSL {
 	visit() {
 		cy.visit('/task');
+		cy.wait(500);
 	}
 
 	addTask(taskName: string) {

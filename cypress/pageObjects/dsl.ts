@@ -4,4 +4,8 @@ export default abstract class DSL {
 	reloadPage() {
 		this.visit();
 	}
+
+	verifyIsOnPage(page: '/' | '/task') {
+		cy.url().should('include', page);
+	}
 }

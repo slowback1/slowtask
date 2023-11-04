@@ -22,6 +22,11 @@ describe('User Actions', () => {
 
 			pageObject.verifyThatUserIsLoggedIn();
 		});
+
+		it('registering the user drops the user off on the tasks page', () => {
+			pageObject.registerUser();
+			pageObject.verifyIsOnPage('/task');
+		});
 	});
 
 	describe('Logging user out', () => {
@@ -56,6 +61,15 @@ describe('User Actions', () => {
 			pageObject.verifyThatUserIsLoggedOut();
 			pageObject.logIn();
 			pageObject.verifyThatUserIsLoggedIn();
+		});
+
+		it('logging the user in should drop the user off on the tasks page', () => {
+			pageObject.registerUser();
+			pageObject.verifyThatUserIsLoggedIn();
+			pageObject.clickLogOutButton();
+			pageObject.verifyThatUserIsLoggedOut();
+			pageObject.logIn();
+			pageObject.verifyIsOnPage('/task');
 		});
 	});
 });

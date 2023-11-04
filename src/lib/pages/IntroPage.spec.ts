@@ -2,6 +2,8 @@ import type { RenderResult } from '@testing-library/svelte';
 import IntroPage from '$lib/pages/IntroPage.svelte';
 import { beforeEach } from 'vitest';
 import { render } from '@testing-library/svelte';
+import MessageBus from '$lib/bus/MessageBus';
+import { Messages } from '$lib/bus/Messages';
 
 describe('IntroPage', () => {
 	let result: RenderResult<IntroPage>;

@@ -1,6 +1,14 @@
 <script>
-  import Button from "$lib/components/buttons/Button.svelte";
   import LoginForm from "$lib/components/partials/forms/LoginForm.svelte";
+  import MessageBus from "$lib/bus/MessageBus";
+  import { onMount } from "svelte";
+  import { Messages } from "$lib/bus/Messages";
+
+  onMount(() => {
+    MessageBus.subscribe(Messages.UserData, (value) => {
+      if (!!value) window.location.href = "/task";
+    });
+  });
 </script>
 
 <div class="intro-page__wrapper">
