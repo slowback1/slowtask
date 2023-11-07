@@ -74,4 +74,17 @@ export default class API {
 
 		return this.Request(url, requestBody, ApiParsingType.None);
 	}
+
+	async UpdateUserTaskData(key: string, body: object) {
+		let url = `?key=eq.${key}`;
+
+		return this.Request(
+			url,
+			{
+				method: 'PATCH',
+				body: JSON.stringify({ task_data: body })
+			},
+			ApiParsingType.None
+		);
+	}
 }

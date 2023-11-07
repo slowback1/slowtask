@@ -27,4 +27,11 @@ export default class UserPayloadGenerator {
 			tasks
 		};
 	}
+
+	generatePayloadFromKey(key: string): IApiPayload {
+		return this.generateV1_0_0Payload({
+			key: key,
+			version: '1.0.0'
+		});
+	}
 }

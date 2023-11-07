@@ -44,4 +44,14 @@ describe('UserPayloadGenerator', () => {
 
 		expect(data.tasks).toEqual(storedTasks);
 	});
+
+	it('can generate a payload with an already-encrypted key', () => {
+		addTestTaskToStore();
+
+		let data = generator.generatePayloadFromKey('key') as ApiPayloadV1_0_0;
+
+		let storedTasks = MessageBus.getLastMessage<Task[]>(Messages.TaskData);
+
+		expect(data.tasks).toEqual(storedTasks);
+	});
 });

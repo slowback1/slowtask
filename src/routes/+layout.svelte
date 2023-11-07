@@ -3,10 +3,12 @@
   import { onMount } from "svelte";
   import MessageBus from "$lib/bus/MessageBus";
   import getRealStorageProvider from "$lib/store/realStorageProvider";
+  import DataSyncingService from "$lib/services/dataSyncingService";
 
 
   onMount(() => {
     MessageBus.initialize(getRealStorageProvider());
+    DataSyncingService.initialize();
   });
 </script>
 <main>

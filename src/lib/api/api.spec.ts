@@ -178,4 +178,31 @@ describe('API', () => {
 			expect(contentTypeHeader).toEqual('application/json');
 		});
 	});
+
+	describe('updating data', () => {
+		let api: API;
+
+		beforeEach(async () => {
+			MockFetch(testApiConfig);
+
+			api = new API();
+
+			await API.api_config_promise;
+		});
+
+		it('can update a row with updated task data', async () => {
+			let mockFetch = MockFetch({});
+
+			let result = await api.UpdateUserTaskData('key', { task_data: { task_data: 'value' } });
+
+			let [url, options] = mockFetch.mock.lastCall;
+
+			expect(url).toContain('?key=eq.key');
+
+			expect(options.method).toEqual('PATCH');
+			expect(options.body).toEqual(
+				JSON.stringify({ task_data: { task_data: { task_data: 'value' } } })
+			);
+		});
+	});
 });
