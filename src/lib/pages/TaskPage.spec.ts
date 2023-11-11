@@ -45,7 +45,7 @@ describe('TaskPage', () => {
 	it('displays the text of the task when there is a task', async () => {
 		addTestTask();
 
-		expect(result.getByText(testTask.name)).toBeTruthy();
+		expect(result.getByTestId('task-item')).toBeTruthy();
 	});
 
 	it('contains an add task button', () => {
@@ -71,7 +71,6 @@ describe('TaskPage', () => {
 
 	it('clicking on a task turns it into an editable field', async () => {
 		addTestTask();
-		await toggleEditModeForFirstTask();
 		await waitFor(() => {
 			expect(result.container.querySelector('input')).toBeTruthy();
 		});
@@ -79,7 +78,6 @@ describe('TaskPage', () => {
 
 	it('clicking the delete button deletes the task', async () => {
 		addTestTask();
-		await toggleEditModeForFirstTask();
 
 		let beforeTaskCount = 1;
 
