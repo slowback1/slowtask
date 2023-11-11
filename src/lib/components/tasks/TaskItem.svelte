@@ -1,5 +1,9 @@
 <script lang="ts">
   import type { HTMLInputEvent, Task } from "$lib/types";
+  import TextBox from "$lib/components/inputs/TextBox.svelte";
+  import SaveIcon from "$lib/components/ui/icons/SaveIcon.svelte";
+  import Button from "$lib/components/buttons/Button.svelte";
+  import DeleteIcon from "$lib/components/ui/icons/DeleteIcon.svelte";
 
   export let task: Task;
   export let onUpdate: (task: Task) => void;
@@ -43,13 +47,38 @@
   }
 </script>
 
-<div data-testid="task-item">
-  {#if isEditMode}
-    <input use:initInput data-testid="task-item__input" bind:value={currentValue} on:change={onChange} />
-    <button on:click={onSave} data-testid="task-item__save">Save</button>
-    <button data-testid="task-item__delete" on:click={deleteTask}>Delete</button>
-  {:else}
-    <input checked={task.isCompleted} type="checkbox" data-testid="task-item__complete" on:click={toggleCompletion} />
-    <button data-testid="task-item__toggle" on:click={toggleEditMode}>{task.name}</button>
-  {/if}
+<div class="task-item" data-testid="task-item">
+  <TextBox id="task-item__input" type="text" bind:value={currentValue} onChange={onChange} />
+  <Button size="small" onClick={onSave} testId="task-item__save">
+    <SaveIcon />
+  </Button>
+  <Button size="small" variant="secondary" testId="task-item__delete" onClick={deleteTask}>
+    <DeleteIcon />
+  </Button>
+  <input checked={task.isCompleted} type="checkbox" data-testid="task-item__complete" on:click={toggleCompletion} />
 </div>
+
+<style>
+    .task-item {
+        width: 100%;
+        display: flex;
+        flex-direction: row;
+        gap: 12px;
+    }
+
+    .task-item :global(.text-box) {
+        flex-grow: 1;
+
+        min-width: 100px;
+    }
+
+    .task-item :global(.icon) {
+        width: var(--font-size-small);
+        height: var(--font-size-small);
+        fill: var(--color-lavender);
+    }
+
+    .task-item :global(.delete-icon) {
+        fill: var(--color-rich-blue);
+    }
+</style>

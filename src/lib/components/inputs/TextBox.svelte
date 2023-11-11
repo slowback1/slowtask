@@ -25,8 +25,16 @@
   };
 
 </script>
-
-<label data-testid={id + "-label"} for={id}>
+<label class="text-box__label" data-testid={id + "-label"} for={id}>
   {label}
 </label>
-<input data-testid={id} {type} value={boundValue} on:input={handleInput} on:change={onChange} {id} />
+<input class="text-box" data-testid={id} {type} value={boundValue} on:input={handleInput} on:change={onChange} {id} />
+
+<style>
+    .text-box {
+        padding: 4px;
+        background-color: transparent;
+        border: 1px solid var(--color-rich-blue);
+        border-radius: 4px;
+    }
+</style>
