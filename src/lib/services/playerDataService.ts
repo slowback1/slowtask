@@ -3,8 +3,16 @@ import type { PlayerData, PlayerStats } from '$lib/types';
 import { Messages } from '$lib/bus/Messages';
 
 export default class PlayerDataService {
+	playerData: PlayerData;
+	unsubscribe: () => void;
+
 	constructor() {
 		if (!this.isPlayerDefined()) this.initializePlayerData();
+
+		this.unsubscribe = MessageBus.subscribe(
+			Messages.PlayerData,
+			(value) => (this.playerData = value)
+		);
 	}
 
 	addExperience(experience: number) {

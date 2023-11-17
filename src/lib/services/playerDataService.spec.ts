@@ -53,6 +53,20 @@ describe('PlayerDataService', () => {
 		expect(playerData.name).toEqual('Task Hero');
 	});
 
+	it('contains the current player data', () => {
+		expect(instance.playerData).toBeDefined();
+	});
+
+	it('updates the player data when it changes', () => {
+		instance.addExperience(5);
+
+		expect(instance.playerData.experience.currentExperience).toEqual(5);
+	});
+
+	it('contains a method to unsubscribe from the player data (meant for cleanup)', () => {
+		expect(instance.unsubscribe).toBeDefined();
+	});
+
 	it('does not overwrite the player data when it is already present', () => {
 		MessageBus.sendMessage(Messages.PlayerData, testPlayerData);
 
