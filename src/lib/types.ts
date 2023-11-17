@@ -32,3 +32,24 @@ export interface ApiPayloadV1_0_0 extends IApiPayload {
 export type UserStoreType = {
 	key: string;
 };
+
+export type PlayerExperience = {
+	level: number;
+	currentExperience: number;
+	pointsToSpend: number;
+};
+
+export type PlayerStats = {
+	health: number;
+	attack: number;
+	searching: number;
+	healing: number;
+	defense: number;
+	gathering: number;
+};
+
+export type PlayerData = {
+	experience: PlayerExperience;
+	stats: PlayerStats;
+	name: string;
+};
