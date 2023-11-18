@@ -6,6 +6,7 @@ import DataSyncingService from '$lib/services/dataSyncingService';
 import type { ApiPayloadV1_0_0 } from '$lib/types';
 import { MockFetch } from '../../testHelpers/mockFetch';
 import { waitFor } from '@testing-library/svelte';
+import { testPlayerData } from '../../testHelpers/testPlayerData';
 
 describe('DataSyncingService', () => {
 	let mockFetch: Mock;
@@ -105,6 +106,18 @@ describe('DataSyncingService', () => {
 		triggerSync();
 		triggerSync();
 		triggerSync();
+
+		await waitFor(() => {
+			expect(MessageBus.getLastMessage(Messages.DataIsSyncing)).toEqual(false);
+		});
+
+		expect(mockFetch).toHaveBeenCalledOnce();
+	});
+
+	it('can trigger a sync by updating player data', async () => {
+		mockFetch.mockClear();
+
+		MessageBus.sendMessage(Messages.PlayerData, testPlayerData);
 
 		await waitFor(() => {
 			expect(MessageBus.getLastMessage(Messages.DataIsSyncing)).toEqual(false);

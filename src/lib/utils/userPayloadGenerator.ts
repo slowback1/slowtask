@@ -21,10 +21,12 @@ export default class UserPayloadGenerator {
 
 	private generateV1_0_0Payload(payload: IApiPayload): ApiPayloadV1_0_0 {
 		let tasks = MessageBus.getLastMessage(Messages.TaskData) ?? [];
+		let player = MessageBus.getLastMessage(Messages.PlayerData) ?? {};
 
 		return {
 			...payload,
-			tasks
+			tasks,
+			playerData: player
 		};
 	}
 

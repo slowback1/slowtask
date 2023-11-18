@@ -83,6 +83,7 @@ export default class LoginService {
 		let taskData = data.task_data as ApiPayloadV1_0_0;
 
 		MessageBus.sendMessage(Messages.TaskData, taskData.tasks);
+		MessageBus.sendMessage(Messages.PlayerData, taskData.playerData);
 	}
 
 	private isResultSuccessful(data: ApiData[]) {

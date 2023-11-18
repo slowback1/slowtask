@@ -132,6 +132,14 @@ describe('Login Service', () => {
 			expect(currentTaskData).toEqual(testApiPayloadV1_0_0.tasks);
 		});
 
+		it('updates the player data after syncing', async () => {
+			await loginService.syncUpdatedData();
+
+			expect(MessageBus.getLastMessage(Messages.PlayerData)).toEqual(
+				testApiPayloadV1_0_0.playerData
+			);
+		});
+
 		it('updates the message bus indicating that the data has been synced', async () => {
 			await loginService.syncUpdatedData();
 

@@ -13,6 +13,7 @@ export default class DataSyncingService {
 		this.api = new API();
 
 		MessageBus.subscribe(Messages.TaskData, () => this.debounce());
+		MessageBus.subscribe(Messages.PlayerData, () => this.debounce());
 
 		this.hasInitialized = true;
 	}

@@ -8,6 +8,7 @@ import type { ApiPayloadV1_0_0, Task } from '$lib/types';
 import TaskService from '$lib/services/taskService';
 import MessageBus from '$lib/bus/MessageBus';
 import { Messages } from '$lib/bus/Messages';
+import { testPlayerData } from '../../testHelpers/testPlayerData';
 
 describe('UserPayloadGenerator', () => {
 	let generator: UserPayloadGenerator;
@@ -43,6 +44,14 @@ describe('UserPayloadGenerator', () => {
 		let storedTasks = MessageBus.getLastMessage<Task[]>(Messages.TaskData);
 
 		expect(data.tasks).toEqual(storedTasks);
+	});
+
+	it('appends the player data for a v1.0.0 payload', () => {
+		MessageBus.sendMessage(Messages.PlayerData, testPlayerData);
+
+		let data = generator.generatePayload('u', 'p') as ApiPayloadV1_0_0;
+
+		expect(data.playerData).toEqual(testPlayerData);
 	});
 
 	it('can generate a payload with an already-encrypted key', () => {

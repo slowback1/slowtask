@@ -27,6 +27,7 @@ export interface IApiPayload {
 
 export interface ApiPayloadV1_0_0 extends IApiPayload {
 	tasks: Task[];
+	playerData: PlayerData;
 }
 
 export type UserStoreType = {
