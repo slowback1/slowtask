@@ -1,5 +1,5 @@
 import type { RenderResult } from '@testing-library/svelte';
-import TextBox from '$lib/components/inputs/TextBox.svelte';
+import TextBox from '$lib/components/ui/inputs/TextBox.svelte';
 import { afterEach, beforeEach } from 'vitest';
 import { fireEvent, render } from '@testing-library/svelte';
 

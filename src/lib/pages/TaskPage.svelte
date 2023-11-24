@@ -5,7 +5,7 @@
   import MessageBus from "$lib/bus/MessageBus";
   import { Messages } from "$lib/bus/Messages";
   import TaskService from "$lib/services/taskService";
-  import Button from "$lib/components/buttons/Button.svelte";
+  import Button from "$lib/components/ui/buttons/Button.svelte";
   import PlayerDataService from "$lib/services/playerDataService";
 
 

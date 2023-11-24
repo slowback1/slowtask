@@ -1,7 +1,7 @@
 <script lang="ts">
-  import Button from "$lib/components/buttons/Button.svelte";
+  import Button from "$lib/components/ui/buttons/Button.svelte";
   import LoginService from "$lib/services/loginService";
-  import TextBox from "$lib/components/inputs/TextBox.svelte";
+  import TextBox from "$lib/components/ui/inputs/TextBox.svelte";
 
 
   let username: string = "";

@@ -1,5 +1,5 @@
 import type { RenderResult } from '@testing-library/svelte';
-import Button from '$lib/components/buttons/Button.svelte';
+import Button from '$lib/components/ui/buttons/Button.svelte';
 import { beforeEach } from 'vitest';
 import { fireEvent, render } from '@testing-library/svelte';
 

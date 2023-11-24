@@ -1,8 +1,8 @@
 <script lang="ts">
   import type { HTMLInputEvent, Task } from "$lib/types";
-  import TextBox from "$lib/components/inputs/TextBox.svelte";
+  import TextBox from "$lib/components/ui/inputs/TextBox.svelte";
   import SaveIcon from "$lib/components/ui/icons/SaveIcon.svelte";
-  import Button from "$lib/components/buttons/Button.svelte";
+  import Button from "$lib/components/ui/buttons/Button.svelte";
   import DeleteIcon from "$lib/components/ui/icons/DeleteIcon.svelte";
 
   export let task: Task;

@@ -1,6 +1,6 @@
 <script lang="ts">
   import LoginService from "$lib/services/loginService";
-  import Button from "$lib/components/buttons/Button.svelte";
+  import Button from "$lib/components/ui/buttons/Button.svelte";
   import MessageBus from "$lib/bus/MessageBus";
   import { Messages } from "$lib/bus/Messages";
   import IsSyncingIndicator from "$lib/components/header/IsSyncingIndicator.svelte";

@@ -1,6 +1,6 @@
 <script lang="ts">
   import HeaderRegisterForm from "$lib/components/header/HeaderRegisterForm.svelte";
-  import Button from "$lib/components/buttons/Button.svelte";
+  import Button from "$lib/components/ui/buttons/Button.svelte";
   import LoginService from "$lib/services/loginService";
   import { onMount } from "svelte";
   import MessageBus from "$lib/bus/MessageBus";
