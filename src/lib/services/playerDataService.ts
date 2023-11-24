@@ -84,6 +84,10 @@ export default class PlayerDataService {
 	}
 
 	private isPlayerDefined() {
-		return !!this.getPlayerData();
+		let maybeStoredPlayerData = this.getPlayerData();
+
+		return (
+			!!maybeStoredPlayerData && !!maybeStoredPlayerData.experience && !!maybeStoredPlayerData.stats
+		);
 	}
 }

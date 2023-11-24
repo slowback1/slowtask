@@ -4,10 +4,11 @@ import { afterEach, beforeEach } from 'vitest';
 import { act, fireEvent, render, waitFor } from '@testing-library/svelte';
 import getLocalStorageMock from '../../testHelpers/localStorageMock';
 import { testTask } from '../../testHelpers/testTask';
-import type { Task } from '$lib/types';
+import type { PlayerData, Task } from '$lib/types';
 import MessageBus from '$lib/bus/MessageBus';
 import { Messages } from '$lib/bus/Messages';
 import TaskService from '$lib/services/taskService';
+import { testPlayerData } from '../../testHelpers/testPlayerData';
 
 let storageMock = getLocalStorageMock();
 
@@ -19,6 +20,8 @@ describe('TaskPage', () => {
 	});
 
 	function renderComponent() {
+		MessageBus.sendMessage(Messages.PlayerData, testPlayerData);
+
 		if (result) result.unmount();
 
 		result = render(TaskPage);
@@ -112,5 +115,19 @@ describe('TaskPage', () => {
 		let firstTask: Task = MessageBus.getLastMessage(Messages.TaskData)[0];
 
 		expect(firstTask.isCompleted).toEqual(false);
+	});
+
+	it('clicking the toggle button adds 1 experience point to the player', async () => {
+		addTestTask();
+
+		let toggle = result.getAllByTestId('task-item__complete')[0];
+
+		await fireEvent.click(toggle);
+
+		await waitFor(() => {
+			let playerData = MessageBus.getLastMessage<PlayerData>(Messages.PlayerData);
+
+			expect(playerData.experience.currentExperience).toEqual(58);
+		});
 	});
 });

@@ -6,11 +6,13 @@
   import { Messages } from "$lib/bus/Messages";
   import TaskService from "$lib/services/taskService";
   import Button from "$lib/components/buttons/Button.svelte";
+  import PlayerDataService from "$lib/services/playerDataService";
 
 
   let tasks: Task[] = MessageBus.getLastMessage(Messages.TaskData) ?? [];
 
   const taskService = new TaskService();
+  const playerDataService = new PlayerDataService();
 
 
   onMount(() => {
@@ -42,6 +44,9 @@
   function toggleCompletion(taskId: string) {
     let task = tasks.find(t => t.taskId === taskId);
     task.isCompleted = !task.isCompleted;
+
+    if (task.isCompleted)
+      playerDataService.addExperience(1);
 
     taskService.update(taskId, task);
   }

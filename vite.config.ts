@@ -7,6 +7,12 @@ export default defineConfig({
 		include: ['src/**/*.{test,spec}.{js,ts}'],
 		environment: 'jsdom',
 		globals: true,
-		setupFiles: ['./vitest-setup.ts']
+		setupFiles: ['./vitest-setup.ts'],
+		alias: [
+			{
+				find: /^svelte$/,
+				replacement: 'svelte/internal'
+			}
+		]
 	}
 });
