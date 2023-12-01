@@ -47,6 +47,14 @@ describe('Button', () => {
 		expect(button).toHaveClass('button-secondary');
 	});
 
+	it("can pass in a 'text' variant to get a 'button-text' class", () => {
+		renderComponent({ variant: 'text' });
+
+		let button = result.getByRole('button');
+
+		expect(button).toHaveClass('button-text');
+	});
+
 	it("does not have a 'button-primary' class when the variant is 'secondary'", () => {
 		renderComponent({ variant: 'secondary' });
 

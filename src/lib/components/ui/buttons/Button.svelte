@@ -1,6 +1,6 @@
 <script lang="ts">
   export let testId: string = "";
-  type ButtonVariant = "primary" | "secondary";
+  type ButtonVariant = "primary" | "secondary" | "text";
   type ButtonSize = "small" | "medium" | "large";
   export let variant: ButtonVariant = "primary";
   export let size: ButtonSize = "medium";
@@ -15,6 +15,7 @@
 
     if (variant === "secondary") addClass("button-secondary");
     if (variant === "primary") addClass("button-primary");
+    if (variant === "text") addClass("button-text");
     if (size === "small") addClass("button-small");
     if (size === "large") addClass("button-large");
 
@@ -88,5 +89,16 @@
     .button-secondary:hover, .button-secondary:focus {
         background-color: var(--color-nyanza);
         color: var(--color-rich-blue);
+    }
+
+    .button-text {
+        background-color: transparent;
+        color: var(--color-rich-blue);
+        border-color: transparent;
+    }
+
+    .button-text:hover, .button-text:focus {
+        background-color: var(--color-rich-blue);
+        color: var(--color-font-light);
     }
 </style>

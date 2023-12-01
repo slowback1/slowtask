@@ -4,6 +4,7 @@
   import MessageBus from "$lib/bus/MessageBus";
   import getRealStorageProvider from "$lib/store/realStorageProvider";
   import DataSyncingService from "$lib/services/dataSyncingService";
+  import LevelUpModal from "$lib/components/partials/player/LevelUpModal.svelte";
 
 
   onMount(() => {
@@ -15,8 +16,12 @@
   <Header />
   <div id="content" class="main-content">
     <slot />
+
+    <LevelUpModal />
   </div>
 </main>
+
+
 <style global>
     @import "../style/reset.css";
     @import "../style/global.css";
