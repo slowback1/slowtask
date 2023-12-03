@@ -5,6 +5,7 @@ export type Task = {
 	dueDate?: Date;
 	createdDate: Date;
 	isCompleted: boolean;
+	regularTaskId?: string;
 };
 export type HTMLInputEvent = Event & { target?: { value?: string } };
 
@@ -53,4 +54,19 @@ export type PlayerData = {
 	experience: PlayerExperience;
 	stats: PlayerStats;
 	name: string;
+};
+
+export enum RegularTaskScheduleType {
+	Daily,
+	Weekly,
+	Monthly,
+	Annually
+}
+
+export type RegularTask = {
+	id: string;
+	taskName: string;
+	scheduleType: RegularTaskScheduleType;
+	scheduleTypeModifier: number;
+	nextScheduledDate: Date;
 };
