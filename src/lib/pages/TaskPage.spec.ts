@@ -2,15 +2,12 @@ import type { RenderResult } from '@testing-library/svelte';
 import TaskPage from '$lib/pages/TaskPage.svelte';
 import { afterEach, beforeEach } from 'vitest';
 import { act, fireEvent, render, waitFor } from '@testing-library/svelte';
-import getLocalStorageMock from '../../testHelpers/localStorageMock';
 import { testTask } from '../../testHelpers/testTask';
 import type { PlayerData, Task } from '$lib/types';
 import MessageBus from '$lib/bus/MessageBus';
 import { Messages } from '$lib/bus/Messages';
 import TaskService from '$lib/services/taskService';
 import { testPlayerData } from '../../testHelpers/testPlayerData';
-
-let storageMock = getLocalStorageMock();
 
 describe('TaskPage', () => {
 	let result: RenderResult<TaskPage>;
@@ -129,5 +126,11 @@ describe('TaskPage', () => {
 
 			expect(playerData.experience.currentExperience).toEqual(58);
 		});
+	});
+
+	it('contains the list of regular tasks', () => {
+		let regularTaskList = result.getByTestId('regular-task-list');
+
+		expect(regularTaskList).toBeInTheDocument();
 	});
 });

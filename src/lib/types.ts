@@ -70,3 +70,8 @@ export type RegularTask = {
 	scheduleTypeModifier: number;
 	nextScheduledDate: Date;
 };
+
+export type RegularTaskModalState = {
+	isOpen: boolean;
+	regularTaskId?: string;
+};

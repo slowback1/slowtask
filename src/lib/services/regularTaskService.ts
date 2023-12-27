@@ -1,6 +1,6 @@
 import MessageBus from '$lib/bus/MessageBus';
 import { Messages } from '$lib/bus/Messages';
-import type { RegularTask, Task } from '$lib/types';
+import type { RegularTask, RegularTaskModalState, Task } from '$lib/types';
 import TaskService from '$lib/services/taskService';
 import { RegularTaskScheduleType } from '$lib/types';
 import { addDays, addMonths } from '$lib/utils/dateUtils';
@@ -13,6 +13,12 @@ export default class RegularTaskService {
 	constructor() {
 		this.initializeMessageBusData();
 
+		if (!RegularTaskService.unsubscribe) RegularTaskService.subscribeToMessages();
+
+		if (!RegularTaskService.listener) RegularTaskService.listenToTasks();
+	}
+
+	static initialize() {
 		if (!RegularTaskService.unsubscribe) RegularTaskService.subscribeToMessages();
 
 		if (!RegularTaskService.listener) RegularTaskService.listenToTasks();
@@ -41,14 +47,36 @@ export default class RegularTaskService {
 		RegularTaskService.updateTask(task);
 	}
 
+	openRegularTask(taskId: string) {
+		let modalState: RegularTaskModalState = {
+			isOpen: true,
+			regularTaskId: taskId
+		};
+
+		MessageBus.sendMessage(Messages.RegularTaskModalState, modalState);
+	}
+
 	private getRandomId() {
 		return Math.random().toString(21).padStart(21, '0');
 	}
 
 	private initializeMessageBusData() {
-		let data = MessageBus.getLastMessage(Messages.RegularTaskData);
+		let regularTaskData = MessageBus.getLastMessage(Messages.RegularTaskData);
 
-		if (!data || !Array.isArray(data)) MessageBus.sendMessage(Messages.RegularTaskData, []);
+		if (!regularTaskData || !Array.isArray(regularTaskData))
+			MessageBus.sendMessage(Messages.RegularTaskData, []);
+
+		let modalState = MessageBus.getLastMessage(Messages.RegularTaskModalState);
+
+		if (!modalState) this.setModalStateToClosed();
+	}
+
+	private setModalStateToClosed() {
+		let modalState: RegularTaskModalState = {
+			isOpen: false
+		};
+
+		MessageBus.sendMessage(Messages.RegularTaskModalState, modalState);
 	}
 
 	private static subscribeToMessages() {
@@ -98,6 +126,8 @@ export default class RegularTaskService {
 	private static addTask(task: RegularTask) {
 		let service = new TaskService();
 
+		if (this.isTaskInTaskList(task)) return;
+
 		service.add({
 			regularTaskId: task.id,
 			taskId: '',
@@ -106,6 +136,14 @@ export default class RegularTaskService {
 			createdDate: new Date(),
 			details: ''
 		});
+	}
+
+	private static isTaskInTaskList(task: RegularTask) {
+		let tasks = MessageBus.getLastMessage<Task[]>(Messages.TaskData) ?? [];
+
+		let existingTask = tasks.find((t) => t.name === task.taskName);
+
+		return Boolean(existingTask);
 	}
 
 	private static isTaskReadyToBeAdded(task: RegularTask) {

@@ -3,5 +3,6 @@ export const Messages = {
 	UserData: 'UserData',
 	DataIsSyncing: 'DataIsSyncing',
 	PlayerData: 'PlayerData',
-	RegularTaskData: 'RegularTaskData'
+	RegularTaskData: 'RegularTaskData',
+	RegularTaskModalState: 'RegularTaskModalState'
 };

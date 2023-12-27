@@ -1,4 +1,4 @@
-import type { RegularTask, Task } from '$lib/types';
+import type { RegularTask, RegularTaskModalState, Task } from '$lib/types';
 import { RegularTaskScheduleType } from '$lib/types';
 import RegularTaskService from '$lib/services/regularTaskService';
 import { afterEach, beforeEach, expect } from 'vitest';
@@ -7,6 +7,7 @@ import { Messages } from '$lib/bus/Messages';
 import { testRegularTask } from '../../testHelpers/testRegularTask';
 import { waitFor } from '@testing-library/svelte';
 import { addDays, addMonths } from '$lib/utils/dateUtils';
+import TaskService from '$lib/services/taskService';
 
 describe('RegularTaskService', () => {
 	let service: RegularTaskService;
@@ -61,6 +62,28 @@ describe('RegularTaskService', () => {
 		addATaskThatTriggersImmediately();
 
 		await waitFor(() => {
+			let tasks = MessageBus.getLastMessage<Task[]>(Messages.TaskData);
+
+			expect(tasks.length).toEqual(1);
+		});
+	});
+
+	it("does not add the task if it's already in the task list", async () => {
+		new TaskService().add({
+			name: 'test',
+			details: '',
+			createdDate: new Date(),
+			taskId: '',
+			isCompleted: false
+		});
+
+		let scheduledDate = addATaskThatTriggersImmediately();
+
+		await waitFor(() => {
+			let regularTasks = RegularTaskService.regularTasks;
+
+			expect(regularTasks[0].nextScheduledDate).toEqual(addDays(scheduledDate, 1));
+
 			let tasks = MessageBus.getLastMessage<Task[]>(Messages.TaskData);
 
 			expect(tasks.length).toEqual(1);
@@ -155,5 +178,28 @@ describe('RegularTaskService', () => {
 		let updatedTask = RegularTaskService.regularTasks[0];
 
 		expect(updatedTask.taskName).toEqual('new name');
+	});
+
+	it("initializes the modal state with 'closed'", () => {
+		let modalState = MessageBus.getLastMessage<RegularTaskModalState>(
+			Messages.RegularTaskModalState
+		);
+
+		expect(modalState.isOpen).toEqual(false);
+	});
+
+	it('can update the modal state when selecting a regular task', () => {
+		service.addRegularTask('name', RegularTaskScheduleType.Annually, new Date());
+
+		let taskId = RegularTaskService.regularTasks[0].id;
+
+		service.openRegularTask(taskId);
+
+		let modalState = MessageBus.getLastMessage<RegularTaskModalState>(
+			Messages.RegularTaskModalState
+		);
+
+		expect(modalState.isOpen).toEqual(true);
+		expect(modalState.regularTaskId).toEqual(taskId);
 	});
 });

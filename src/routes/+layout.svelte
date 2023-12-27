@@ -5,11 +5,13 @@
   import getRealStorageProvider from "$lib/store/realStorageProvider";
   import DataSyncingService from "$lib/services/dataSyncingService";
   import LevelUpModal from "$lib/components/partials/player/LevelUpModal.svelte";
+  import RegularTaskService from "$lib/services/regularTaskService";
 
 
   onMount(() => {
     MessageBus.initialize(getRealStorageProvider());
     DataSyncingService.initialize();
+    RegularTaskService.initialize();
   });
 </script>
 <main>
